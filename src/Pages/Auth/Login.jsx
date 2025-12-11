@@ -4,83 +4,106 @@ import useAuth from "../../Hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router";
 
 const Login = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { signInUser, signInWithGoogle } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  // previous route or fallback "/"
   const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (data) => {
     signInUser(data.email, data.password)
-      .then((res) => {
-        console.log("Login Success:", res.user);
-        navigate(from, { replace: true });
-      })
+      .then(() => navigate(from, { replace: true }))
       .catch((err) => console.log("Login Error:", err.message));
   };
 
   const handleGoogleLogin = () => {
     signInWithGoogle()
-      .then((res) => {
-        console.log("Google Login Success:", res.user);
-        navigate(from, { replace: true });
-      })
+      .then(() => navigate(from, { replace: true }))
       .catch((err) => console.log("Google Login Error:", err.message));
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="card bg-base-100 w-full max-w-sm shadow-2xl rounded-2xl p-5">
-        <h1 className="text-4xl font-bold text-center mb-6">Login</h1>
+    <div className="min-h-screen flex items-center rounded-3xl my-8 justify-center px-4 relative overflow-hidden bg-black">
+      <div className="absolute w-[650px] h-[650px] bg-[#d95022]/40 rounded-full blur-[160px] -top-40 -left-40"></div>
+      <div className="absolute w-[550px] h-[550px] bg-[#5a1163]/40 rounded-full blur-[160px] -bottom-40 -right-40"></div>
 
-        <form onSubmit={handleSubmit(handleLogin)} className="space-y-3">
-          <fieldset className="fieldset space-y-3">
-            <div>
-              <label className="label font-semibold">Email</label>
-              <input
-                type="email"
-                {...register("email")}
-                className="input input-bordered w-full"
-                placeholder="Enter your email"
-              />
-            </div>
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_60px_-10px_rgba(255,255,255,0.25)] rounded-3xl p-8">
+        <h1 className="text-4xl font-extrabold text-center text-white mb-6 logo">
+          Welcome Back
+        </h1>
 
-            <div>
-              <label className="label font-semibold">Password</label>
-              <input
-                type="password"
-                {...register("password")}
-                className="input input-bordered w-full"
-                placeholder="Enter your password"
-              />
-            </div>
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
+          {/* Email */}
+          <label className="form-control w-full">
+            <span className="label-text text-white/90 font-semibold">
+              Email
+            </span>
+            <input
+              type="email"
+              {...register("email", { required: "Email is required" })}
+              className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2"
+              placeholder="Enter your email"
+            />
+            {errors.email && (
+              <p className="text-red-400 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </label>
 
-            <button className="btn btn-neutral w-full mt-2">Login</button>
+          {/* Password */}
+          <label className="form-control w-full">
+            <span className="label-text text-white/90 font-semibold">
+              Password
+            </span>
+            <input
+              type="password"
+              {...register("password", { required: "Password is required" })}
+              className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2"
+              placeholder="Enter your password"
+            />
+            {errors.password && (
+              <p className="text-red-400 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </label>
 
-            <p className="text-sm text-center mt-3">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-blue-600 font-semibold">
-                Register
-              </Link>
-            </p>
-          </fieldset>
+          <button
+            className="btn w-full text-white font-bold border-none shadow-lg mt-2"
+            style={{ backgroundColor: "#d95022" }}
+          >
+            Login
+          </button>
+
+          <p className="text-sm text-center text-white/80 mt-3">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="font-semibold hover:underline"
+              style={{ color: "#d95022" }}
+            >
+              Register
+            </Link>
+          </p>
         </form>
 
-        {/* Google */}
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-white/30"></div>
+          <span className="text-white/70 text-sm">OR</span>
+          <div className="flex-1 h-px bg-white/30"></div>
+        </div>
+
         <button
           onClick={handleGoogleLogin}
-          className="btn bg-white text-black border-[#e5e5e5]"
+          className="btn border-0 w-full bg-white text-black font-semibold hover:bg-gray-200 shadow-lg"
         >
-          <svg
-            aria-label="Google logo"
-            width="16"
-            height="16"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
+          <svg width="16" height="16" viewBox="0 0 512 512">
             <g>
               <path d="m0 0H512V512H0" fill="#fff"></path>
               <path
