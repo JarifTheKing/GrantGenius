@@ -1,62 +1,21 @@
 import { NavLink } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 const Navbar = () => {
-  const navItems = (
-    <>
-      {/* HOME */}
-      <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `px-4 py-2 rounded-lg tracking-wide transition-all duration-300 font-bold ${
-              isActive
-                ? "bg-primary text-white shadow-md scale-105"
-                : "text-secondary hover:text-primary hover:bg-primary/10"
-            }`
-          }
-        >
-          Home
-        </NavLink>
-      </li>
+  const { user, logOut } = useAuth();
 
-      {/* ALL SCHOLARSHIPS */}
-      <li>
-        <NavLink
-          to="/scholarships"
-          className={({ isActive }) =>
-            `px-4 py-2 rounded-lg tracking-wide transition-all duration-300 font-bold ${
-              isActive
-                ? "bg-primary text-white shadow-md scale-105"
-                : "text-secondary hover:text-primary hover:bg-primary/10"
-            }`
-          }
-        >
-          All Scholarships
-        </NavLink>
-      </li>
-
-      {/* DASHBOARD */}
-      <li>
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            `px-4 py-2 rounded-lg tracking-wide transition-all duration-300 font-bold ${
-              isActive
-                ? "bg-primary text-white shadow-md scale-105"
-                : "text-secondary hover:text-primary hover:bg-primary/10"
-            }`
-          }
-        >
-          Dashboard
-        </NavLink>
-      </li>
-    </>
-  );
+  // Active Link Style (reuseable)
+  const activeLink = ({ isActive }) =>
+    `px-4 py-2 rounded-lg tracking-wide transition-all duration-300 font-bold ${
+      isActive
+        ? "bg-primary text-white shadow-md scale-105"
+        : "text-secondary hover:text-primary hover:bg-primary/10"
+    }`;
 
   return (
     <div className="w-full backdrop-blur-xl bg-white/70 border border-primary/20 shadow-md rounded-3xl px-4 py-2 mt-3">
       <div className="navbar max-w-7xl mx-auto">
-        {/* MOBILE MENU */}
+        {/* MOBILE */}
         <div className="navbar-start">
           <div className="dropdown lg:hidden">
             <button tabIndex={0} className="btn btn-ghost btn-square">
@@ -78,27 +37,74 @@ const Navbar = () => {
 
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 w-52 p-3 shadow bg-white rounded-xl border border-primary/20 z-[100]"
+              className="menu menu-sm dropdown-content mt-3 w-52 p-3 shadow bg-white  rounded-xl border border-primary/20 z-[100]"
             >
-              {navItems}
-
-              <li className="mt-2">
-                <NavLink
-                  to="/login"
-                  className="btn btn-outline w-full border-secondary text-secondary"
-                >
-                  Login
-                </NavLink>
-              </li>
-
+              {/* HOME */}
               <li>
-                <NavLink
-                  to="/register"
-                  className="btn w-full bg-secondary text-white hover:bg-secondary/90"
-                >
-                  Register
+                <NavLink to="/" className={activeLink}>
+                  Home
                 </NavLink>
               </li>
+
+              {/* ALL SCHOLARSHIPS */}
+              <li>
+                <NavLink to="/scholarships" className={activeLink}>
+                  All Scholarships
+                </NavLink>
+              </li>
+
+              {/* DASHBOARD */}
+              {user && (
+                <li>
+                  <NavLink to="/dashboard" className={activeLink}>
+                    Dashboard
+                  </NavLink>
+                </li>
+              )}
+
+              {/* LOGIN & REGISTER (active now!) */}
+              {!user ? (
+                <>
+                  <li className="mt-2">
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        `btn w-full font-bold border-secondary ${
+                          isActive
+                            ? "bg-primary text-white border-primary"
+                            : "btn-outline text-secondary"
+                        }`
+                      }
+                    >
+                      Login
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/register"
+                      className={({ isActive }) =>
+                        `btn w-full font-bold ${
+                          isActive
+                            ? "bg-primary text-white shadow-md scale-105"
+                            : "bg-secondary text-white hover:bg-secondary/90"
+                        }`
+                      }
+                    >
+                      Register
+                    </NavLink>
+                  </li>
+                </>
+              ) : (
+                <li className="mt-3">
+                  <button
+                    onClick={logOut}
+                    className="btn w-full bg-secondary text-white hover:bg-secondary/80"
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -120,24 +126,81 @@ const Navbar = () => {
 
         {/* DESKTOP MENU */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal gap-3">{navItems}</ul>
+          <ul className="menu menu-horizontal gap-3">
+            <li>
+              <NavLink to="/" className={activeLink}>
+                Home
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/scholarships" className={activeLink}>
+                All Scholarships
+              </NavLink>
+            </li>
+
+            {user && (
+              <li>
+                <NavLink to="/dashboard" className={activeLink}>
+                  Dashboard
+                </NavLink>
+              </li>
+            )}
+          </ul>
         </div>
 
-        {/* DESKTOP RIGHT BUTTONS */}
-        <div className="navbar-end hidden lg:flex">
-          <NavLink
-            to="/login"
-            className="btn btn-outline rounded-full font-bold px-6 border-secondary text-secondary hover:bg-primary hover:text-white"
-          >
-            Login
-          </NavLink>
+        {/* RIGHT SIDE */}
+        <div className="navbar-end hidden lg:flex items-center gap-3">
+          {!user && (
+            <>
+              {/* LOGIN ACTIVE */}
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `btn font-bold px-6 rounded-full shadow transition-all  ${
+                    isActive
+                      ? "bg-primary text-white"
+                      : "btn-outline text-secondary hover:bg-primary hover:text-white"
+                  }`
+                }
+              >
+                Login
+              </NavLink>
 
-          <NavLink
-            to="/register"
-            className="btn ml-2 bg-primary text-white font-bold px-6 rounded-full shadow hover:bg-secondary/90 transition-all"
-          >
-            Register
-          </NavLink>
+              {/* REGISTER ACTIVE */}
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  `btn font-bold px-6 rounded-full shadow transition-all ${
+                    isActive
+                      ? "bg-primary text-white scale-105"
+                      : "btn-outline text-secondary hover:bg-primary hover:text-white"
+                  }`
+                }
+              >
+                Register
+              </NavLink>
+            </>
+          )}
+
+          {user && (
+            <div className="flex items-center gap-2">
+              <img
+                src={
+                  user?.photoURL ||
+                  "https://img.icons8.com/office/40/gender-neutral-user.png"
+                }
+                className="w-12 h-12 rounded-full border border-primary"
+              />
+
+              <button
+                onClick={logOut}
+                className="btn btn-outline font-bold px-6 rounded-full text-secondary hover:bg-primary hover:text-white transition-all"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
