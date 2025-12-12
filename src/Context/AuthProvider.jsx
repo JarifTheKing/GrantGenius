@@ -38,6 +38,16 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  // UPDATE PROFILE
+  const updateUserProfile = (name, photoURL) => {
+    setLoading(true);
+
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photoURL || null,
+    });
+  };
+
   // GOOGLE LOGIN
   const signInWithGoogle = () => {
     setLoading(true);
@@ -65,6 +75,7 @@ const AuthProvider = ({ children }) => {
     loading,
     registerUser,
     signInUser,
+    updateUserProfile,
     signInWithGoogle,
     logOut,
   };

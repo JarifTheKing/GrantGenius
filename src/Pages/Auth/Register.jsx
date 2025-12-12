@@ -2,76 +2,183 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router";
+import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
+import { IoEyeOff } from "react-icons/io5";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import useAxios from "../../Hooks/useAxios"; // ✅ added
 
 const Register = () => {
+  const axiosSecure = useAxios(); // ✅ added
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { registerUser, signInWithGoogle } = useAuth();
+
+  const { registerUser, signInWithGoogle, updateUserProfile } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [preview, setPreview] = useState("");
-
   const from = location.state?.from || "/";
 
+  const [preview, setPreview] = useState("");
+  const [image, setImage] = useState([]);
+
+  // IMAGE PREVIEW
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
+    setImage(e.target.files);
+
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleRegister = (data) => {
-    registerUser(data.email, data.password, data.name, preview || null)
-      .then(() => navigate(from, { replace: true }))
-      .catch((err) => console.log(err.message));
+  // ===============================
+  // ⭐ SAVE USER TO DATABASE (POST)
+  // ===============================
+  const { mutateAsync: saveUserToDB } = useMutation({
+    mutationFn: async (userData) => {
+      const res = await axiosSecure.post("/users", userData);
+      return res.data;
+    },
+  });
+
+  // REGISTER HANDLER
+  const handleRegister = async (formDataInput) => {
+    const loading = toast.loading("Creating account...");
+
+    try {
+      // Validate image
+      if (!image.length) {
+        toast.dismiss(loading);
+        return toast.error("Please upload a profile image.");
+      }
+
+      // Upload image
+      const imgForm = new FormData();
+      imgForm.append("image", image[0]);
+
+      const uploadRes = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_imgBB_API_KEY
+        }`,
+        imgForm
+      );
+
+      const imageURL = uploadRes.data.data?.display_url;
+
+      // Create Firebase user
+      const result = await registerUser(
+        formDataInput.email,
+        formDataInput.password
+      );
+
+      const user = result.user;
+
+      await user.getIdToken(true);
+
+      // Update profile
+      await updateUserProfile(formDataInput.name, imageURL);
+
+      // ===============================
+      // ⭐ SEND USER TO DATABASE
+      // ===============================
+      await saveUserToDB({
+        name: formDataInput.name,
+        email: formDataInput.email,
+        photoURL: imageURL,
+        role: "user",
+        createdAt: new Date(),
+      });
+
+      toast.dismiss(loading);
+      toast.success(`Welcome, ${formDataInput.name}!`);
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      toast.dismiss(loading);
+      toast.error(err.message);
+    }
+  };
+
+  // GOOGLE LOGIN
+  const handleGoogleLogin = () => {
+    const loading = toast.loading("Signing in with Google...");
+
+    signInWithGoogle()
+      .then(async (result) => {
+        const user = result.user;
+
+        // Save Google user to DB
+        await saveUserToDB({
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          role: "user",
+          createdAt: new Date(),
+        });
+
+        toast.dismiss(loading);
+        toast.success(`Welcome, ${user.displayName}!`);
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        toast.dismiss(loading);
+        toast.error(err.message);
+      });
   };
 
   return (
     <div className="min-h-screen flex items-center rounded-3xl my-8 justify-center px-4 py-16 bg-black relative overflow-hidden">
-      {/* === THEME COLOR GLOW BACKGROUND === */}
+      {/* Glow Background */}
       <div className="absolute w-[650px] h-[650px] bg-[#d95022]/40 rounded-full blur-[160px] -top-40 -left-40"></div>
       <div className="absolute w-[550px] h-[550px] bg-[#5a1163]/40 rounded-full blur-[160px] -bottom-40 -right-40"></div>
 
-      {/* Main Card */}
-      <div
-        className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20
-                      shadow-[0_0_60px_-10px_rgba(255,255,255,0.25)]
-                      rounded-3xl p-8"
-      >
+      {/* Card */}
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_60px_-10px_rgba(255,255,255,0.25)] rounded-3xl p-8">
         <h2 className="text-4xl font-extrabold text-center text-white tracking-wide mb-4 logo">
           Create Account
         </h2>
 
         <p className="text-center text-white/70 mb-8">
           Join{" "}
-          <span className="font-bold text-xl" style={{ color: "#d95022" }}>
+          <span
+            className="font-bold text-2xl logo"
+            style={{ color: "#d95022" }}
+          >
             GrantGenius
           </span>{" "}
           Today!
         </p>
 
-        {/* ===== FORM START ===== */}
+        {/* FORM */}
         <form className="space-y-5" onSubmit={handleSubmit(handleRegister)}>
           {/* Name */}
           <label className="form-control w-full">
             <span className="label-text text-white/90 font-semibold">Name</span>
             <input
-              {...register("name", { required: "Name is required" })}
+              {...register("name", {
+                required: "Name is required",
+                maxLength: {
+                  value: 20,
+                  message: "Name cannot be too long",
+                },
+              })}
               type="text"
               placeholder="Your Name"
-              className="input input-bordered w-full bg-white/20 
-                         text-white placeholder-white/50 border-white/30 mt-2"
+              className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2"
             />
             {errors.name && (
               <p className="text-red-300 text-sm mt-1">{errors.name.message}</p>
             )}
           </label>
 
-          {/* Image Upload */}
+          {/* Profile Image */}
           <label className="form-control w-full">
             <span className="label-text text-white/90 font-semibold">
               Profile Image
@@ -82,15 +189,13 @@ const Register = () => {
               accept="image/*"
               {...register("photo")}
               onChange={handleImageChange}
-              className="file-input file-input-bordered w-full 
-                         border-white/30 bg-[#d95022]/80 text-white mt-2"
+              className="file-input file-input-bordered w-full border-white/30 bg-[#d95022]/80 text-white mt-2"
             />
 
             {preview && (
               <img
                 src={preview}
-                className="w-20 h-20 rounded-full mt-3 border-2 
-                           border-white shadow-md object-cover"
+                className="w-20 h-20 rounded-full mt-3 border-2 border-white shadow-md object-cover"
               />
             )}
           </label>
@@ -100,13 +205,20 @@ const Register = () => {
             <span className="label-text text-white/90 font-semibold">
               Email
             </span>
+
             <input
-              {...register("email", { required: "Email is required" })}
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "Invalid email format",
+                },
+              })}
               type="email"
               placeholder="you@example.com"
-              className="input input-bordered w-full bg-white/20 
-                         text-white placeholder-white/50 border-white/30 mt-2"
+              className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2"
             />
+
             {errors.email && (
               <p className="text-red-300 text-sm mt-1">
                 {errors.email.message}
@@ -115,31 +227,44 @@ const Register = () => {
           </label>
 
           {/* Password */}
-          <label className="form-control w-full">
-            <span className="label-text text-white/90 font-semibold">
-              Password
-            </span>
-            <input
-              {...register("password", {
-                required: "Password required",
-                minLength: { value: 6, message: "Minimum 6 characters" },
-              })}
-              type="password"
-              placeholder="Enter password"
-              className="input input-bordered w-full bg-white/20 
-                         text-white placeholder-white/50 border-white/30 mt-2"
-            />
-            {errors.password && (
-              <p className="text-red-300 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </label>
+          <div className="relative">
+            <label className="form-control w-full">
+              <span className="label-text text-white/90 font-semibold">
+                Password
+              </span>
 
-          {/* Submit Button */}
+              <input
+                {...register("password", {
+                  required: "Password required",
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/,
+                    message:
+                      "Password must include uppercase, lowercase & number",
+                  },
+                })}
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2"
+              />
+
+              {errors.password && (
+                <p className="text-red-300 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </label>
+
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-[42px] text-white/70 hover:text-white cursor-pointer text-xl z-20"
+            >
+              {showPassword ? <FaEye /> : <IoEyeOff />}
+            </span>
+          </div>
+
+          {/* Submit */}
           <button
-            className="btn my-4 w-full text-white font-bold border-none
-                       shadow-lg"
+            className="btn my-4 w-full text-white font-bold border-none shadow-lg"
             style={{ backgroundColor: "#d95022" }}
           >
             Create Account
@@ -155,36 +280,31 @@ const Register = () => {
 
         {/* Google Login */}
         <button
-          onClick={signInWithGoogle}
+          onClick={handleGoogleLogin}
           className="btn border-0 w-full bg-white text-black font-semibold hover:bg-gray-200 shadow-lg"
         >
-          <svg
-            aria-label="Google logo"
-            width="16"
-            height="16"
-            viewBox="0 0 512 512"
-          >
+          <svg width="16" height="16" viewBox="0 0 512 512">
             <g>
-              <path fill="#fff" d="m0 0H512V512H0"></path>
+              <path fill="#fff" d="M0 0h512v512H0"></path>
               <path
                 fill="#34a853"
                 d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
               ></path>
               <path
                 fill="#4285f4"
-                d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
+                d="M386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
               ></path>
               <path
                 fill="#fbbc02"
-                d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
+                d="M90 341a208 200 0 010-171l63 49q-12 37 0 73"
               ></path>
               <path
                 fill="#ea4335"
-                d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                d="M153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
               ></path>
             </g>
           </svg>
-          Login with Google
+          Sign in with Google
         </button>
 
         <p className="text-center text-white/80 mt-6">
