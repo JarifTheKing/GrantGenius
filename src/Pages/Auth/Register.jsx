@@ -7,10 +7,10 @@ import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import useAxios from "../../Hooks/useAxios"; // ✅ added
+import useAxios from "../../Hooks/useAxios";
 
 const Register = () => {
-  const axiosSecure = useAxios(); // ✅ added
+  const axiosSecure = useAxios();
 
   const {
     register,
