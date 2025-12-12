@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router";
@@ -8,6 +8,7 @@ import { IoEyeOff } from "react-icons/io5";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import useAxios from "../../Hooks/useAxios";
+import { Bars } from "react-loader-spinner";
 
 const Register = () => {
   const axiosSecure = useAxios();
@@ -28,6 +29,22 @@ const Register = () => {
   const [preview, setPreview] = useState("");
   const [image, setImage] = useState([]);
 
+  // Loader States
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  // ⭐ PAGE LOAD LOADER
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulating page load (You can replace with real auth check)
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // IMAGE PREVIEW
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -38,9 +55,7 @@ const Register = () => {
     }
   };
 
-  // ===============================
-  // ⭐ SAVE USER TO DATABASE (POST)
-  // ===============================
+  // SAVE USER TO DB
   const { mutateAsync: saveUserToDB } = useMutation({
     mutationFn: async (userData) => {
       const res = await axiosSecure.post("/users", userData);
@@ -50,16 +65,17 @@ const Register = () => {
 
   // REGISTER HANDLER
   const handleRegister = async (formDataInput) => {
-    const loading = toast.loading("Creating account...");
+    setLoading(true);
+    const loadingToast = toast.loading("Creating account...");
 
     try {
-      // Validate image
       if (!image.length) {
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
+        setLoading(false);
         return toast.error("Please upload a profile image.");
       }
 
-      // Upload image
+      // Upload image to imgbb
       const imgForm = new FormData();
       imgForm.append("image", image[0]);
 
@@ -72,22 +88,19 @@ const Register = () => {
 
       const imageURL = uploadRes.data.data?.display_url;
 
-      // Create Firebase user
+      // Firebase user
       const result = await registerUser(
         formDataInput.email,
         formDataInput.password
       );
 
       const user = result.user;
-
       await user.getIdToken(true);
 
       // Update profile
       await updateUserProfile(formDataInput.name, imageURL);
 
-      // ===============================
-      // ⭐ SEND USER TO DATABASE
-      // ===============================
+      // Save to DB
       await saveUserToDB({
         name: formDataInput.name,
         email: formDataInput.email,
@@ -96,25 +109,26 @@ const Register = () => {
         createdAt: new Date(),
       });
 
-      toast.dismiss(loading);
+      toast.dismiss(loadingToast);
       toast.success(`Welcome, ${formDataInput.name}!`);
-
       navigate(from, { replace: true });
     } catch (err) {
-      toast.dismiss(loading);
+      toast.dismiss(loadingToast);
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // GOOGLE LOGIN
   const handleGoogleLogin = () => {
-    const loading = toast.loading("Signing in with Google...");
+    setGoogleLoading(true);
+    const loadingToast = toast.loading("Signing in with Google...");
 
     signInWithGoogle()
       .then(async (result) => {
         const user = result.user;
 
-        // Save Google user to DB
         await saveUserToDB({
           name: user.displayName,
           email: user.email,
@@ -123,15 +137,35 @@ const Register = () => {
           createdAt: new Date(),
         });
 
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
         toast.success(`Welcome, ${user.displayName}!`);
         navigate(from, { replace: true });
       })
       .catch((err) => {
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
         toast.error(err.message);
+      })
+      .finally(() => {
+        setGoogleLoading(false);
       });
   };
+
+  // ============================
+  // ⭐ PAGE LOADER UI
+  // ============================
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen  flex items-center justify-center">
+        <Bars
+          height="80"
+          width="80"
+          color="#d95022"
+          ariaLabel="bars-loading"
+          visible={true}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center rounded-3xl my-8 justify-center px-4 py-16 bg-black relative overflow-hidden">
@@ -164,10 +198,7 @@ const Register = () => {
             <input
               {...register("name", {
                 required: "Name is required",
-                maxLength: {
-                  value: 20,
-                  message: "Name cannot be too long",
-                },
+                maxLength: { value: 20, message: "Name cannot be too long" },
               })}
               type="text"
               placeholder="Your Name"
@@ -266,8 +297,19 @@ const Register = () => {
           <button
             className="btn my-4 w-full text-white font-bold border-none shadow-lg"
             style={{ backgroundColor: "#d95022" }}
+            disabled={loading}
           >
-            Create Account
+            {loading ? (
+              <Bars
+                height="26"
+                width="26"
+                color="#ffffff"
+                ariaLabel="bars-loading"
+                visible
+              />
+            ) : (
+              "Create Account"
+            )}
           </button>
         </form>
 
@@ -282,29 +324,42 @@ const Register = () => {
         <button
           onClick={handleGoogleLogin}
           className="btn border-0 w-full bg-white text-black font-semibold hover:bg-gray-200 shadow-lg"
+          disabled={googleLoading}
         >
-          <svg width="16" height="16" viewBox="0 0 512 512">
-            <g>
-              <path fill="#fff" d="M0 0h512v512H0"></path>
-              <path
-                fill="#34a853"
-                d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-              ></path>
-              <path
-                fill="#4285f4"
-                d="M386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-              ></path>
-              <path
-                fill="#fbbc02"
-                d="M90 341a208 200 0 010-171l63 49q-12 37 0 73"
-              ></path>
-              <path
-                fill="#ea4335"
-                d="M153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              ></path>
-            </g>
-          </svg>
-          Sign in with Google
+          {googleLoading ? (
+            <Bars
+              height="26"
+              width="26"
+              color="#000000"
+              ariaLabel="bars-loading"
+              visible
+            />
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 512 512">
+                <g>
+                  <path fill="#fff" d="M0 0h512v512H0"></path>
+                  <path
+                    fill="#34a853"
+                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
+                  ></path>
+                  <path
+                    fill="#4285f4"
+                    d="M386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
+                  ></path>
+                  <path
+                    fill="#fbbc02"
+                    d="M90 341a208 200 0 010-171l63 49q-12 37 0 73"
+                  ></path>
+                  <path
+                    fill="#ea4335"
+                    d="M153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                  ></path>
+                </g>
+              </svg>
+              Sign in with Google
+            </>
+          )}
         </button>
 
         <p className="text-center text-white/80 mt-6">

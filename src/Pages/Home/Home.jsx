@@ -2,176 +2,233 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router";
 import Banner from "../Banner/Banner";
+import { Bars } from "react-loader-spinner";
+import useAxios from "../../Hooks/useAxios";
+import img1 from "../../assets/Story/Boy-1.jpg";
+import img2 from "../../assets/Story/Boy-2.jpg";
+import img3 from "../../assets/Story/Girl.jpg";
 
 const Home = () => {
   const [scholarships, setScholarships] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const axiosSecure = useAxios();
 
   useEffect(() => {
-    fetch("/scholarships.json") // Update this with your API or local file
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = data
-          .sort((a, b) => a.applicationFee - b.applicationFee) // Top lowest fee
+    axiosSecure
+      .get("/all-scholarship")
+      .then((res) => {
+        const sorted = res.data
+          .sort((a, b) => a.applicationFees - b.applicationFees)
           .slice(0, 6);
+
         setScholarships(sorted);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load scholarships");
+        setLoading(false);
       });
-  }, []);
+  }, [axiosSecure]);
 
   return (
-    <div className="bg-gray-50 ">
-      {/* ======================= HERO SECTION ======================= */}
-
-      {/* <section className="relative text-center py-32 px-6 bg-gradient-to-r from-[#5a1163] to-[#d95022] text-white rounded-b-[40px] shadow-lg overflow-hidden rounded-3xl my-8">
-        <motion.h1
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl font-extrabold"
-        >
-          Find the Perfect Scholarship for You
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-lg mt-4 max-w-2xl mx-auto"
-        >
-          Explore thousands of national & international scholarships to support
-          your academic journey.
-        </motion.p>
-
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-        >
-          <Link
-            to="/scholarships"
-            className="btn bg-white text-[#d95022] font-bold px-8 py-3 mt-6 rounded-full shadow hover:bg-gray-100"
-          >
-            Search Scholarship
-          </Link>
-        </motion.div>
-      </section> */}
+    <div className="bg-gray-50">
+      {/* Banner */}
       <section className="my-8">
-        <Banner></Banner>
+        <Banner />
       </section>
 
+      {/* Loader */}
+      {loading && (
+        <div className="flex justify-center items-center py-20">
+          <Bars height="80" width="80" color="#d95022" ariaLabel="loading" />
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <p className="text-center text-red-500 font-bold py-10">{error}</p>
+      )}
+
       {/* ======================= TOP SCHOLARSHIPS ======================= */}
-      <section className="max-w-7xl mx-auto py-16 px-6 md:rounded-3xl my-8 bg-secondary text-white">
-        <h2 className="text-3xl font-bold text-center mb-10">
-          🎓 Top Scholarships
-        </h2>
+      {!loading && !error && (
+        <section className="max-w-7xl mx-auto py-16 px-6 my-8 bg-gradient-to-br from-[#5a1163] via-[#d3b6d0] to-[#d95022] rounded-3xl">
+          <h2 className="text-4xl font-extrabold text-center mb-10 text-white bg-clip-text text-transparent">
+            🎓 Top Scholarships
+          </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {scholarships.map((item, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {scholarships.map((item, i) => (
+              <motion.div
+                key={item._id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden  hover:shadow-xl transition
+                     flex flex-col h-full"
+              >
+                {/* Image */}
+                <img
+                  src={item.universityImage}
+                  alt={item.scholarshipName}
+                  className="w-full h-48 object-cover"
+                />
+
+                {/* Body */}
+                <div className="p-5 flex flex-col justify-between flex-grow">
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {item.scholarshipName}
+                    </h3>
+
+                    <p className="text-gray-600 text-sm font-medium">
+                      {item.universityName} — {item.universityCity},{" "}
+                      {item.universityCountry}
+                    </p>
+
+                    <div className="text-gray-700 text-sm space-y-1">
+                      <p>
+                        <strong>Category:</strong> {item.scholarshipCategory}
+                      </p>
+                      <p>
+                        <strong>Degree:</strong> {item.degree}
+                      </p>
+                      <p>
+                        <strong>Fees:</strong> ${item.applicationFees}
+                      </p>
+                      <p>
+                        <strong>Deadline:</strong> {item.applicationDeadline}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* BUTTON */}
+                  <Link to={`/details-scholarship/${item._id}`}>
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full py-2 mt-5 rounded-xl font-semibold text-white bg-[#d95022] hover:bg-[#b53f1b]"
+                    >
+                      View Details
+                    </motion.button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ======================= SUCCESS STORIES ======================= */}
+
+      {/* import img1 from "../../assets/Story/Boy-1.jpg";
+import img2 from "../../assets/Story/Boy-2.jpg";
+import img3 from "../../assets/Story/Girl.jpg"; */}
+
+      <section className="relative py-24 px-6 my-16 bg-gradient-to-br from-[#d95022] via-[#d3b6d0] to-[#5a1163] md:rounded-3xl overflow-hidden">
+        {/* Soft Background Shapes */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-[#d95022]/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#5a1163]/10 rounded-full blur-[120px]"></div>
+
+        {/* Heading */}
+        <div className="text-center mb-16 relative z-10">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+            Our Students{" "}
+            <span className="text-transparent logo text-6xl bg-clip-text bg-gradient-to-r from-[#aa09e9] to-[#e96309]">
+              Success Stories
+            </span>
+          </h2>
+          <p className="text-gray-300 mt-3 text-lg max-w-2xl mx-auto">
+            Real stories from students who achieved their dreams with the help
+            of our platform.
+          </p>
+        </div>
+
+        {/* Cards */}
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10 relative z-10">
+          {[
+            {
+              img: img1,
+              text: "This platform made my Canada Master's scholarship journey so smooth. Highly trusted!",
+              name: "Arif Mahmud",
+            },
+            {
+              img: img2,
+              text: "The smartest platform with updated scholarships. Helped me secure funding easily!",
+              name: "Tasnim Jahan",
+            },
+            {
+              img: img3,
+              text: "Thanks to this website, I received a fully-funded scholarship in Turkey. Grateful!",
+              name: "Rafiul Karim",
+            },
+          ].map((story, i) => (
             <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 40 }}
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="bg-white p-6 rounded-xl shadow-md border hover:shadow-xl transition"
+              animate={{ y: [0, -6, 0] }}
+              transition={{
+                duration: 2,
+                delay: i * 0.15,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="p-7 rounded-2xl backdrop-blur-2xl bg-white/80 shadow-xl border border-gray-200 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300"
             >
-              <h3 className="text-xl font-bold text-[#d95022]">{item.title}</h3>
-              <p className="text-gray-600 mt-2">{item.university}</p>
+              {/* Profile */}
+              <div className="flex items-center gap-4 mb-5">
+                <img
+                  src={story.img}
+                  alt={story.name}
+                  className="w-14 h-14 rounded-full object-cover border-2 border-[#d95022]/40 shadow-sm"
+                />
+                <div>
+                  <h4 className="font-semibold text-[#5a1163] text-lg">
+                    {story.name}
+                  </h4>
+                  <p className="text-gray-500 text-sm">Scholarship Recipient</p>
+                </div>
+              </div>
 
-              <p className="mt-4 text-gray-700 font-semibold">
-                Fee: ${item.applicationFee}
+              {/* Text */}
+              <p className="text-gray-700 leading-relaxed text-base">
+                {story.text}
               </p>
-
-              <Link to={`/scholarship/${item.id}`}>
-                <button className="btn bg-[#d95022] text-white rounded-full w-full mt-5 hover:bg-[#b73c1a]">
-                  View Details
-                </button>
-              </Link>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ======================= SUCCESS STORIES ======================= */}
-      <section className="bg-primary/60 py-20 px-6 md:rounded-3xl my-8">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          🌟 Success Stories
-        </h2>
-
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="p-6 bg-gray-100 rounded-xl shadow"
-          >
-            <p className="text-gray-700">
-              “This platform helped me find the best scholarship for my Master’s
-              degree in Canada!”
-            </p>
-            <h4 className="mt-3 font-bold text-[#d95022]">— Arif Mahmud</h4>
-          </motion.div>
-
-          {/* Card 2 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="p-6 bg-gray-100 rounded-xl shadow"
-          >
-            <p className="text-gray-700">
-              “Easy to use and updated scholarship information. Really helped my
-              journey!”
-            </p>
-            <h4 className="mt-3 font-bold text-[#d95022]">— Tasnim Jahan</h4>
-          </motion.div>
-
-          {/* Card 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
-            className="p-6 bg-gray-100 rounded-xl shadow"
-          >
-            <p className="text-gray-700">
-              “Because of this site, I applied & got a full-funded scholarship
-              in Turkey!”
-            </p>
-            <h4 className="mt-3 font-bold text-[#d95022]">— Rafiul Karim</h4>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ======================= FAQ SECTION ======================= */}
-      <section className="bg-secondary/60 text-white py-20 px-6 md:rounded-3xl my-8">
+      {/* FAQ */}
+      <section className="bg-gradient-to-br from-[#5a1163] via-[#d3b6d0] to-[#d95022] text-white py-20 px-6 md:rounded-3xl my-8">
         <h2 className="text-3xl font-bold text-center mb-10">
           ❓ Frequently Asked Questions
         </h2>
 
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="bg-primary/70 p-5 rounded-xl">
-            <h3 className="font-bold text-lg">
-              How do I apply for a scholarship?
-            </h3>
-            <p className="text-gray-300 mt-1">
-              Click on "View Details" for your desired scholarship and follow
-              the given requirements.
-            </p>
-          </div>
-
-          <div className="bg-primary/70 p-5 rounded-xl">
-            <h3 className="font-bold text-lg">Is the platform free to use?</h3>
-            <p className="text-gray-300 mt-1">
-              Yes! Searching scholarships is 100% free.
-            </p>
-          </div>
-
-          <div className="bg-primary/70 p-5 rounded-xl">
-            <h3 className="font-bold text-lg">Are all scholarships updated?</h3>
-            <p className="text-gray-300 mt-1">
-              We update scholarship information regularly so every student gets
-              accurate info.
-            </p>
-          </div>
+          {[
+            {
+              q: "How do I apply for a scholarship?",
+              a: "Click on 'View Details' and follow the requirements.",
+            },
+            {
+              q: "Is the platform free?",
+              a: "Yes, searching scholarships is free.",
+            },
+            {
+              q: "Are scholarships updated?",
+              a: "We update information regularly for accuracy.",
+            },
+          ].map((faq, i) => (
+            <div
+              key={i}
+              className="bg-primary/70 p-5 rounded-xl border border-white/20"
+            >
+              <h3 className="font-bold text-lg">{faq.q}</h3>
+              <p className="text-gray-300 mt-1">{faq.a}</p>
+            </div>
+          ))}
         </div>
       </section>
     </div>

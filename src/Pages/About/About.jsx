@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { GraduationCap, Globe2, Users, Award } from "lucide-react";
+import { Bars } from "react-loader-spinner";
 
 const About = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ================= LOADER ===================
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <Bars
+          height="80"
+          width="80"
+          color="#d95022"
+          ariaLabel="bars-loading"
+          visible={true}
+        />
+        <p className="mt-4 text-lg font-medium text-gray-700">
+          Loading About Page...
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="py-20 ">
+    <div className="py-20 px-4 md:px-10 bg-gradient-to-b from-gray-50 via-white to-gray-100">
       {/* ================= HERO SECTION ================= */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -27,7 +53,7 @@ const About = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.7 }}
-        className="bg-white shadow-lg hover:shadow-2xl rounded-3xl p-10 md:p-14 border border-primary/10 transition-all duration-300"
+        className="bg-white shadow-xl hover:shadow-2xl rounded-3xl p-10 md:p-14 border border-gray-100 transition-all duration-300"
       >
         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-5">
           Our Mission
@@ -38,11 +64,11 @@ const About = () => {
           deserves transparent, fast, and reliable access to international
           opportunities. Through GrantGenius, we connect ambitious learners with
           world-class universities, curated funding programs, and a clean,
-          intuitive platform built for their success.
+          intuitive platform designed for their success.
         </p>
       </motion.div>
 
-      {/* ================= STATS / HIGHLIGHTS ================= */}
+      {/* ================= STATS ================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 my-20">
         {[
           {
@@ -58,14 +84,14 @@ const About = () => {
           {
             icon: Users,
             title: "10,000+ Students",
-            desc: "Guided to study abroad with the right resources.",
+            desc: "Guided to study abroad with trusted resources.",
           },
         ].map((item, index) => (
           <motion.div
             key={index}
-            whileHover={{ scale: 1.06, y: -5 }}
+            whileHover={{ scale: 1.05, y: -5 }}
             transition={{ type: "spring", stiffness: 200 }}
-            className="bg-gradient-to-br from-primary/10 to-white p-10 rounded-3xl text-center shadow-lg border border-primary/20 hover:shadow-xl"
+            className="bg-white p-10 rounded-3xl text-center shadow-xl border border-gray-100 hover:shadow-2xl hover:border-primary/30 transition-all duration-300"
           >
             <item.icon className="w-14 h-14 mx-auto text-primary" />
             <h3 className="mt-5 text-2xl font-bold text-gray-900">
@@ -76,12 +102,12 @@ const About = () => {
         ))}
       </div>
 
-      {/* ================= WHY STUDENTS TRUST US ================= */}
+      {/* ================= TRUST SECTION ================= */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="bg-white shadow-lg hover:shadow-2xl rounded-3xl p-10 md:p-14 border border-primary/10"
+        className="bg-white shadow-xl hover:shadow-2xl rounded-3xl p-10 md:p-14 border border-gray-100 transition-all duration-300"
       >
         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-6">
           Why Students Trust Us
@@ -91,7 +117,7 @@ const About = () => {
           {[
             "Accurate and verified scholarship information",
             "Modern UI with intelligent search and filtering",
-            "Fast, secure, and student-focused user experience",
+            "Fast, secure, and student-focused experience",
             "Dedicated support and real student reviews",
           ].map((text, idx) => (
             <motion.li

@@ -11,6 +11,8 @@ import About from "../Pages/About/About";
 import PrivateRoute from "./PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AddScholarship from "../Pages/Dashboard-Pages/AddScholarship";
+import MyScholarships from "../Pages/Dashboard-Pages/MyScholarships";
+import UpdateScholarship from "../Pages/Dashboard-Pages/UpdateScholarship";
 
 export const router = createBrowserRouter([
   {
@@ -25,20 +27,13 @@ export const router = createBrowserRouter([
       {
         path: "/all-scholarships",
         element: <AllScholarships />,
-        loader: () => fetch("/scholarshipsData.json"),
+        // loader: () => fetch("/scholarshipsData.json"),
       },
       {
         path: "/details-scholarship/:id",
         element: <DetailsScholarship />,
-        loader: async () => {
-          const scholarships = await fetch("/scholarshipsData.json").then(
-            (res) => res.json()
-          );
-          const reviews = await fetch("/reviewsData.json").then((res) =>
-            res.json()
-          );
-          return { scholarships, reviews };
-        },
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/all-scholarship/${params.id}`),
       },
 
       {
@@ -73,7 +68,27 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "add-scholarship",
-        element: <AddScholarship></AddScholarship>,
+        element: (
+          <PrivateRoute>
+            <AddScholarship></AddScholarship>,
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-scholarship",
+        element: (
+          <PrivateRoute>
+            <MyScholarships></MyScholarships>,
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "update-scholarship/:id",
+        element: (
+          <PrivateRoute>
+            <UpdateScholarship></UpdateScholarship>,
+          </PrivateRoute>
+        ),
       },
     ],
   },

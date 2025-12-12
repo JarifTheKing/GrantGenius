@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLoaderData } from "react-router";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
+import { Bars } from "react-loader-spinner";
+import { ArrowLeft } from "lucide-react";
 
 const DetailsScholarship = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { scholarships, reviews } = useLoaderData();
+  const scholarshipData = useLoaderData();
 
-  const scholarshipData = scholarships.find((item) => item.id === parseInt(id));
+  const [loading, setLoading] = useState(true);
+
+  // Small delay for loader (doesn’t affect your data logic)
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 600);
+  }, []);
+
+  // ================= LOADER =================
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <Bars
+          height="80"
+          width="80"
+          color="#d95022"
+          ariaLabel="bars-loading"
+          visible={true}
+        />
+      </div>
+    );
+  }
 
   if (!scholarshipData) {
     return (
@@ -17,40 +40,61 @@ const DetailsScholarship = () => {
     );
   }
 
-  const scholarshipReviews = reviews.filter(
-    (rev) => rev.scholarshipId === parseInt(id)
-  );
-
+  // ================= APPLY HANDLER =================
   const handleApply = () => {
-    navigate(`/checkout/${scholarshipData.id}`);
+    Swal.fire({
+      title: "Proceed to Apply?",
+      text: "You will be redirected to the checkout page.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#6366F1",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, continue",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(`/checkout/${scholarshipData._id}`);
+      }
+    });
   };
 
+  // ================= UI =================
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-6xl mx-auto px-4 py-12"
+      className="  py-12"
     >
-      {/* ================= Hero Section ================= */}
+      {/* Back Button (Unchanged) */}
+      <button
+        onClick={() => navigate(-1)}
+        className="btn btn-primary flex items-center gap-2 text-white hover:text-white mb-6 transition"
+      >
+        <ArrowLeft size={20} />
+        <span className="font-medium">Back</span>
+      </button>
+
+      {/* HERO SECTION */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white shadow-xl rounded-3xl p-6 md:p-10 border border-gray-100"
+        className="rounded-3xl bg-white shadow-2xl border border-gray-100 p-6 md:p-10"
       >
         <div className="grid md:grid-cols-2 gap-10 items-center">
+          {/* Image */}
           <motion.img
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.4 }}
             src={scholarshipData.universityImage}
             alt="University"
-            className="rounded-2xl w-full h-72 object-cover shadow-md border"
+            className="rounded-2xl w-full h-72 object-cover shadow-xl"
           />
 
+          {/* Details */}
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 logo leading-snug">
               {scholarshipData.scholarshipName}
             </h1>
 
@@ -58,7 +102,7 @@ const DetailsScholarship = () => {
               {scholarshipData.universityName}
             </p>
 
-            <div className="mt-4 space-y-2 text-gray-700 text-[15px]">
+            <div className="mt-5 space-y-3 text-gray-700 text-[15px]">
               <p>
                 🌍 <b>Location:</b> {scholarshipData.universityCountry},{" "}
                 {scholarshipData.universityCity}
@@ -88,11 +132,12 @@ const DetailsScholarship = () => {
               )}
             </div>
 
+            {/* Apply Button (Style Unchanged) */}
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleApply}
-              className="mt-6 bg-primary text-white px-7 py-3 rounded-xl shadow-lg hover:bg-primary/90 transition w-full md:w-auto text-lg font-medium"
+              className="btn btn-primary mt-6 px-8 py-3 text-lg font-semibold"
             >
               Apply for Scholarship
             </motion.button>
@@ -100,8 +145,13 @@ const DetailsScholarship = () => {
         </div>
       </motion.div>
 
-      {/* ================= Description Section ================= */}
-      <div className="mt-12 bg-white p-8 shadow-lg rounded-3xl border border-gray-100">
+      {/* DESCRIPTION */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mt-12 bg-white shadow-xl p-8 rounded-3xl border border-gray-100"
+      >
         <h2 className="text-2xl font-bold mb-3 text-gray-900">
           Scholarship Description
         </h2>
@@ -109,10 +159,15 @@ const DetailsScholarship = () => {
           {scholarshipData.description ||
             "No detailed description available for this scholarship."}
         </p>
-      </div>
+      </motion.div>
 
-      {/* ================= Coverage / Stipend ================= */}
-      <div className="mt-12 bg-white p-8 shadow-lg rounded-3xl border border-gray-100">
+      {/* COVERAGE */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mt-12 bg-white shadow-xl p-8 rounded-3xl border border-gray-100"
+      >
         <h2 className="text-2xl font-bold mb-3 text-gray-900">
           Scholarship Coverage
         </h2>
@@ -120,50 +175,7 @@ const DetailsScholarship = () => {
           {scholarshipData.coverage ||
             "Coverage or stipend information is not available."}
         </p>
-      </div>
-
-      {/* ================= Reviews Section ================= */}
-      <div className="mt-12 bg-white p-8 shadow-lg rounded-3xl border border-gray-100">
-        <h2 className="text-2xl font-bold mb-5 text-gray-900">
-          Student Reviews
-        </h2>
-
-        {scholarshipReviews.length === 0 ? (
-          <p className="text-gray-500 text-[15px]">No reviews available yet.</p>
-        ) : (
-          <div className="space-y-6">
-            {scholarshipReviews.map((rev) => (
-              <motion.div
-                key={rev.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="p-5 border rounded-2xl shadow-sm flex gap-5 bg-gray-50"
-              >
-                <img
-                  src={rev.userImage}
-                  alt={rev.userName}
-                  className="w-14 h-14 rounded-full object-cover ring-2 ring-primary/20"
-                />
-
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{rev.userName}</h3>
-
-                  <p className="text-sm text-gray-500">{rev.reviewDate}</p>
-
-                  <p className="text-yellow-500 mt-1 text-lg">
-                    {"⭐".repeat(rev.ratingPoint)}
-                  </p>
-
-                  <p className="text-gray-700 mt-2 text-[15px] leading-relaxed">
-                    {rev.reviewComment}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

@@ -1,9 +1,12 @@
+
+
 import React, { useEffect, useState } from "react";
-import { Link, useLoaderData } from "react-router";
+import axios from "axios";
+import { Link } from "react-router";
 import { motion } from "framer-motion";
+import { Bars } from "react-loader-spinner";
 
 const AllScholarships = () => {
-  const loadedData = useLoaderData();
   const [scholarships, setScholarships] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
@@ -12,13 +15,29 @@ const AllScholarships = () => {
   const [filterSubject, setFilterSubject] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
 
-  // Load data dynamically
-  useEffect(() => {
-    setScholarships(loadedData);
-    setFiltered(loadedData);
-  }, [loadedData]);
+  const [loading, setLoading] = useState(true);
 
-  // Filters
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/all-scholarship");
+
+        const data = Array.isArray(res.data) ? res.data : [];
+
+        setScholarships(data);
+        setFiltered(data);
+      } catch (error) {
+        console.error("Error fetching scholarships:", error);
+        setScholarships([]);
+        setFiltered([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   useEffect(() => {
     let result = scholarships;
 
@@ -26,12 +45,12 @@ const AllScholarships = () => {
       result = result.filter(
         (item) =>
           item.scholarshipName
-            .toLowerCase()
+            ?.toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
           item.universityName
-            .toLowerCase()
+            ?.toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          item.degree.toLowerCase().includes(searchQuery.toLowerCase())
+          item.degree?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -43,13 +62,12 @@ const AllScholarships = () => {
     if (filterSubject)
       result = result.filter((item) => item.subjectCategory === filterSubject);
 
-    if (filterLocation) {
+    if (filterLocation)
       result = result.filter(
         (item) =>
           item.universityCountry === filterLocation ||
           item.universityCity === filterLocation
       );
-    }
 
     setFiltered(result);
   }, [
@@ -60,14 +78,27 @@ const AllScholarships = () => {
     scholarships,
   ]);
 
+  // ========================= LOADER =========================
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex justify-center items-center">
+        <Bars
+          height="80"
+          width="80"
+          color="#d95022"
+          ariaLabel="bars-loading"
+          visible={true}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="  py-10">
-      {/* Title */}
+    <div className="px-5 py-10">
       <h1 className="text-3xl md:text-4xl font-bold text-secondary text-center mb-10">
         All Scholarships
       </h1>
 
-      {/* Search & Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-10">
         <input
           type="text"
@@ -81,7 +112,7 @@ const AllScholarships = () => {
           className="select select-bordered w-full rounded-xl"
           onChange={(e) => setFilterCategory(e.target.value)}
         >
-          <option value="">Filter by Funding</option>
+          <option value="">Funding Type</option>
           <option>Full fund</option>
           <option>Partial</option>
           <option>Self-fund</option>
@@ -91,9 +122,9 @@ const AllScholarships = () => {
           className="select select-bordered w-full rounded-xl"
           onChange={(e) => setFilterSubject(e.target.value)}
         >
-          <option value="">Filter by Subject</option>
-          <option>Computer Science</option>
+          <option value="">Subject</option>
           <option>Engineering</option>
+          <option>Computer Science</option>
           <option>Business</option>
           <option>Law</option>
         </select>
@@ -102,7 +133,7 @@ const AllScholarships = () => {
           className="select select-bordered w-full rounded-xl"
           onChange={(e) => setFilterLocation(e.target.value)}
         >
-          <option value="">Filter by Country/City</option>
+          <option value="">Country/City</option>
           <option>USA</option>
           <option>UK</option>
           <option>Canada</option>
@@ -110,7 +141,6 @@ const AllScholarships = () => {
         </select>
       </div>
 
-      {/* Scholarships Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-8">
         {filtered.length === 0 && (
           <p className="text-center text-gray-600 col-span-4 text-lg">
@@ -120,19 +150,17 @@ const AllScholarships = () => {
 
         {filtered.map((item) => (
           <motion.div
-            key={item.id}
+            key={item._id}
             whileHover={{ scale: 1.02 }}
             className="bg-white border border-primary/20 rounded-xl p-5 shadow-sm flex flex-col justify-between h-[420px]"
           >
             <div>
-              {/* Image */}
               <img
                 src={item.universityImage}
                 className="w-full h-36 object-cover rounded-lg"
                 alt={item.universityName}
               />
 
-              {/* Text */}
               <h3 className="text-lg font-semibold text-secondary mt-4 leading-tight">
                 {item.scholarshipName}
               </h3>
@@ -141,7 +169,6 @@ const AllScholarships = () => {
                 {item.universityName}
               </p>
 
-              {/* Tags */}
               <div className="flex flex-wrap gap-2 mt-3">
                 <span className="badge badge-primary text-xs">
                   {item.scholarshipCategory}
@@ -164,9 +191,8 @@ const AllScholarships = () => {
               </p>
             </div>
 
-            {/* Button - ALWAYS AT BOTTOM */}
             <Link
-              to={`/details-scholarship/${item.id}`}
+              to={`/details-scholarship/${item._id}`}
               className="mt-4 w-full"
             >
               <button className="btn bg-primary text-white w-full rounded-full">

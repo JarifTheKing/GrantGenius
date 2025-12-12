@@ -1,14 +1,29 @@
 import { BadgePlus } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import Navbar from "../Components/Nav/Navbar";
 import Footer from "../Components/Footer/Footer";
+import { Bars } from "react-loader-spinner";
 
 const DashboardLayout = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  // You can trigger loader like this wherever needed:
+  // setIsLoading(true);
+  // setTimeout(() => setIsLoading(false), 2000);
+
   return (
-    <div>
+    <div className="relative">
+      {/* ===== Loader Overlay ===== */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/60 flex justify-center items-center z-[9999]">
+          <Bars height="80" width="80" color="#ffffff" ariaLabel="loading" />
+        </div>
+      )}
+
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+
         <div className="drawer-content">
           {/* Navbar */}
           <nav className="navbar w-full bg-base-300">
@@ -17,7 +32,7 @@ const DashboardLayout = () => {
               aria-label="open sidebar"
               className="btn btn-square btn-ghost"
             >
-              {/* Sidebar toggle icon */}
+              {/* Sidebar icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -33,6 +48,7 @@ const DashboardLayout = () => {
                 <path d="M14 10l2 2l-2 2"></path>
               </svg>
             </label>
+
             <div className="px-4">
               <div className="flex items-center gap-2 font-extrabold text-2xl text-secondary tracking-wide">
                 <img
@@ -43,30 +59,23 @@ const DashboardLayout = () => {
               </div>
             </div>
           </nav>
-          {/* Page content here */}
+
+          {/* Main Page + Footer */}
           <div className="flex flex-col min-h-screen">
-            {/* Page Content */}
             <div className="flex-grow">
               <Outlet />
             </div>
 
-            {/* Footer always at bottom */}
             <Footer />
           </div>
-          {/* <div className="p-4">Page Content</div> */}
         </div>
 
+        {/* Sidebar */}
         <div className="drawer-side is-drawer-close:overflow-visible">
-          <label
-            htmlFor="my-drawer-4"
-            aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
-          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-            {/* Sidebar content here */}
-            <ul className="menu w-full grow">
-              {/* List item */}
+          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
+          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+            <ul className="menu w-full grow">
               {/* Home */}
               <li>
                 <Link
@@ -74,7 +83,6 @@ const DashboardLayout = () => {
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Homepage"
                 >
-                  {/* Home icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -97,9 +105,8 @@ const DashboardLayout = () => {
                 <Link
                   to="add-scholarship"
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="add-scholarship"
+                  data-tip="Add Scholarship"
                 >
-                  {/* Home icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -107,29 +114,43 @@ const DashboardLayout = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-badge-plus-icon lucide-badge-plus"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
                     <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
                     <line x1="12" x2="12" y1="8" y2="16" />
                     <line x1="8" x2="16" y1="12" y2="12" />
                   </svg>
-                  {/* <BadgePlus /> */}
                   <span className="is-drawer-close:hidden">
                     Add Scholarship
                   </span>
                 </Link>
               </li>
 
-              {/* List item */}
+              {/* My Scholarship */}
+              <li>
+                <Link
+                  to="my-scholarship"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Scholarship"
+                >
+                  <img
+                    width="18"
+                    height="18"
+                    src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                    alt="scholarship"
+                  />
+                  <span className="is-drawer-close:hidden">My Scholarship</span>
+                </Link>
+              </li>
+
+              {/* Settings */}
               <li>
                 <button
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Settings"
                 >
-                  {/* Settings icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

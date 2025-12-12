@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router";
 import toast from "react-hot-toast";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
+import { Bars } from "react-loader-spinner";
 
 const Login = () => {
   const {
@@ -12,77 +13,101 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const { signInUser, signInWithGoogle } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
+  // ===================== PAGE LOADER =====================
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 900);
+    return () => clearTimeout(timer);
+  }, []);
+
   // ===================== HANDLE LOGIN =====================
   const handleLogin = (data) => {
-    const loading = toast.loading("Logging in...");
+    setIsButtonLoading(true);
+    const loadingToast = toast.loading("Logging in...");
 
     signInUser(data.email, data.password)
       .then((result) => {
         const user = result.user;
 
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
         toast.success(`Welcome back, ${user.displayName || "User"}!`);
+        setIsButtonLoading(false);
 
         navigate(from, { replace: true });
       })
       .catch((err) => {
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
         toast.error(err.message);
+        setIsButtonLoading(false);
       });
   };
 
   // ===================== GOOGLE LOGIN =====================
   const handleGoogleLogin = () => {
-    const loading = toast.loading("Signing in with Google...");
+    setIsButtonLoading(true);
+    const loadingToast = toast.loading("Signing in with Google...");
 
     signInWithGoogle()
       .then((result) => {
-        const user = result.user;
-
-        toast.dismiss(loading);
-        toast.success(`Welcome, ${user.displayName}!`);
-
+        toast.dismiss(loadingToast);
+        toast.success(`Welcome, ${result.user.displayName}!`);
         navigate(from, { replace: true });
       })
       .catch((err) => {
-        toast.dismiss(loading);
+        toast.dismiss(loadingToast);
         toast.error(err.message);
-      });
+      })
+      .finally(() => setIsButtonLoading(false));
   };
+
+  // ===================== PAGE LOADING SCREEN =====================
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center ">
+        <Bars height="90" width="90" color="#d95022" ariaLabel="loading" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center rounded-3xl my-8 justify-center px-4 relative overflow-hidden bg-black">
+      {/* ===== Full-Screen Loader (during login) ===== */}
+      {isButtonLoading && (
+        <div className="absolute inset-0 bg-black/70 flex justify-center items-center z-50">
+          <Bars height="80" width="80" color="#ffffff" ariaLabel="loading" />
+        </div>
+      )}
+
       {/* Background Glow */}
       <div className="absolute w-[650px] h-[650px] bg-[#d95022]/40 rounded-full blur-[160px] -top-40 -left-40"></div>
       <div className="absolute w-[550px] h-[550px] bg-[#5a1163]/40 rounded-full blur-[160px] -bottom-40 -right-40"></div>
 
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_60px_-10px_rgba(255,255,255,0.25)] rounded-3xl p-8">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_60px_-10px_rgba(255,255,255,0.25)] rounded-3xl p-8 relative z-10">
         <h1 className="text-4xl font-extrabold text-center text-white mb-6 logo">
           Welcome Back
         </h1>
 
-        <p>
-          <p className="text-center text-white/70 mb-8">
-            Log in{" "}
-            <span
-              className="font-bold text-2xl logo"
-              style={{ color: "#d95022" }}
-            >
-              GrantGenius
-            </span>{" "}
-            to access your account!
-          </p>
+        <p className="text-center text-white/70 mb-8">
+          Log in{" "}
+          <span
+            className="font-bold text-2xl logo"
+            style={{ color: "#d95022" }}
+          >
+            GrantGenius
+          </span>{" "}
+          to access your account!
         </p>
 
-        {/* ===================== LOGIN FORM ===================== */}
+        {/* ===================== FORM ===================== */}
         <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
           {/* Email */}
           <label className="form-control w-full">
@@ -95,7 +120,7 @@ const Login = () => {
               {...register("email", {
                 required: "Email is required",
                 pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
                   message: "Invalid email format",
                 },
               })}
@@ -118,12 +143,9 @@ const Login = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                {...register("password", {
-                  required: "Password is required",
-                })}
+                {...register("password", { required: "Password is required" })}
                 className="input input-bordered w-full bg-white/20 text-white placeholder-white/50 border-white/30 mt-2 pr-10"
               />
-
               {errors.password && (
                 <p className="text-red-400 text-sm mt-1">
                   {errors.password.message}
@@ -131,10 +153,9 @@ const Login = () => {
               )}
             </label>
 
-            {/* Eye Icon */}
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[42px] text-white/70 hover:text-white cursor-pointer text-xl z-20"
+              className="absolute right-3 top-[42px] text-white/70 hover:text-white cursor-pointer text-xl"
             >
               {showPassword ? <FaEye /> : <IoEyeOff />}
             </span>
@@ -142,8 +163,10 @@ const Login = () => {
 
           {/* Login Button */}
           <button
+            type="submit"
             className="btn w-full text-white font-bold border-none shadow-lg mt-2"
             style={{ backgroundColor: "#d95022" }}
+            disabled={isButtonLoading}
           >
             Login
           </button>
@@ -171,6 +194,7 @@ const Login = () => {
         <button
           onClick={handleGoogleLogin}
           className="btn border-0 w-full bg-white text-black font-semibold hover:bg-gray-200 shadow-lg"
+          disabled={isButtonLoading}
         >
           <svg width="16" height="16" viewBox="0 0 512 512">
             <g>
