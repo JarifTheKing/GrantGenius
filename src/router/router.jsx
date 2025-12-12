@@ -13,6 +13,9 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import AddScholarship from "../Pages/Dashboard-Pages/AddScholarship";
 import MyScholarships from "../Pages/Dashboard-Pages/MyScholarships";
 import UpdateScholarship from "../Pages/Dashboard-Pages/UpdateScholarship";
+import HowItWorks from "../Pages/How-It-Works/HowItWorks";
+import Blogs from "../Pages/Home/Blogs/Blogs";
+import ContactUs from "../Pages/Home/Contact/ContactUs";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +26,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+        // loader: () => fetch("/reviewsData.json"),
       },
       {
         path: "/all-scholarships",
@@ -43,6 +47,18 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LogIn />,
+      },
+      {
+        path: "/how-it-works",
+        element: <HowItWorks />,
+      },
+      {
+        path: "/blogs",
+        element: <Blogs />,
+      },
+      {
+        path: "/contact",
+        element: <ContactUs />,
       },
       {
         path: "/profile",

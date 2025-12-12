@@ -86,9 +86,27 @@ const Navbar = () => {
                   All Scholarships
                 </NavLink>
               </li>
+
               <li>
                 <NavLink to="/about" className={activeLink}>
                   About Us
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/how-it-works" className={activeLink}>
+                  How it Works
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/blogs" className={activeLink}>
+                  Blogs
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/contact" className={activeLink}>
+                  Contact Us
                 </NavLink>
               </li>
 
@@ -153,6 +171,21 @@ const Navbar = () => {
             <li>
               <NavLink to="/all-scholarships" className={activeLink}>
                 All Scholarships
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/how-it-works" className={activeLink}>
+                How it Works
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/blogs" className={activeLink}>
+                Blogs
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/contact" className={activeLink}>
+                Contact Us
               </NavLink>
             </li>
             <li>
