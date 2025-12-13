@@ -19,7 +19,10 @@ import ContactUs from "../Pages/Home/Contact/ContactUs";
 import MyCourses from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
 import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
 import MyApplications from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
-import Payment from "../Pages/Dashboard-Pages/Payment/Payment";
+import Payment from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
+import PaymentHistory from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
+import PaymentSuccess from "../Pages/Dashboard-Pages/PaymentSuccess/PaymentSuccess";
+import PaymentCancel from "../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel";
 
 export const router = createBrowserRouter([
   {
@@ -115,10 +118,27 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "payment",
+        path: "payment-history",
         element: (
           <PrivateRoute>
-            <Payment></Payment>,
+            <PaymentHistory></PaymentHistory>,
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "payment-success/:id",
+        element: (
+          <PrivateRoute>
+            <PaymentSuccess />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "payment-cancel/:id",
+        element: (
+          <PrivateRoute>
+            <PaymentCancel />
           </PrivateRoute>
         ),
       },

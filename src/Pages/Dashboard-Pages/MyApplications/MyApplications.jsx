@@ -9,31 +9,95 @@ import { Link } from "react-router";
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const axiosSecure = useAxios();
-  const { user } = useAuth(); // ✅ AUTH USER
+  const { user } = useAuth();
 
   // ================= FETCH APPLICATIONS =================
+  // useEffect(() => {
+  //   if (!user?.email) {
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   const fetchApplications = async () => {
+  //     try {
+  //       setLoading(true);
+
+  //       const res = await axiosSecure.get(
+  //         `/my-applications?email=${user.email}`
+  //       );
+
+  //       setApplications(Array.isArray(res.data) ? res.data : []);
+  //     } catch (error) {
+  //       console.error("LOAD APPLICATIONS ERROR:", error);
+  //       Swal.fire("Error", "Failed to load applications", "error");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchApplications();
+  // }, [user, axiosSecure]);
+
   useEffect(() => {
-    if (!user?.email) {
-      setLoading(false);
-      return;
-    }
+    if (!user?.email) return;
 
-    setLoading(true);
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
 
-    axiosSecure
-      .get(`/my-applications?email=${user.email}`)
-      .then((res) => {
-        setApplications(Array.isArray(res.data) ? res.data : []);
-      })
-      .catch((error) => {
-        console.error(error);
+        const res = await axiosSecure.get(
+          `/my-applications?email=${user.email}`
+        );
+
+        const apps = Array.isArray(res.data) ? res.data : [];
+
+        // 🔥 AUTO SYNC PAID → PROCESSING
+        await Promise.all(
+          apps.map((app) => {
+            if (
+              app.paymentStatus === "paid" &&
+              app.applicationStatus === "pending"
+            ) {
+              return axiosSecure.patch(`/payment-success/${app._id}`);
+            }
+            return null;
+          })
+        );
+
+        // 🔁 REFETCH UPDATED DATA
+        const updatedRes = await axiosSecure.get(
+          `/my-applications?email=${user.email}`
+        );
+
+        setApplications(updatedRes.data);
+      } catch (error) {
+        console.error("LOAD APPLICATIONS ERROR:", error);
         Swal.fire("Error", "Failed to load applications", "error");
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchApplications();
   }, [user, axiosSecure]);
+
+  // ================= PAYMENT HANDLER =================
+  const handlePayNow = async (applicationId) => {
+    try {
+      const res = await axiosSecure.post("/create-checkout-session", {
+        applicationId,
+      });
+
+      if (res.data?.url) {
+        window.location.href = res.data.url; // ✅ safer than new tab
+      }
+    } catch (error) {
+      console.error("PAY NOW ERROR:", error);
+      Swal.fire("Error", "Failed to initiate payment", "error");
+    }
+  };
 
   // ================= DELETE HANDLER =================
   const handleDelete = (id, status) => {
@@ -54,12 +118,18 @@ const MyApplications = () => {
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, remove",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/my-applications/${id}`).then(() => {
+        try {
+          await axiosSecure.delete(`/my-applications/${id}`);
+
           setApplications((prev) => prev.filter((item) => item._id !== id));
+
           Swal.fire("Removed!", "Application removed successfully.", "success");
-        });
+        } catch (error) {
+          console.error("DELETE ERROR:", error);
+          Swal.fire("Error", "Failed to delete application", "error");
+        }
       }
     });
   };
@@ -173,16 +243,12 @@ const MyApplications = () => {
                       Paid
                     </span>
                   ) : (
-                    <Link
-                      to="/dashboard/payment"
-                      state={{
-                        applicationId: app._id,
-                        amount: app.applicationFees,
-                      }}
+                    <button
+                      onClick={() => handlePayNow(app._id)}
                       className="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700 hover:bg-orange-200 transition"
                     >
                       Pay Now
-                    </Link>
+                    </button>
                   )}
                 </td>
 
@@ -205,7 +271,11 @@ const MyApplications = () => {
                     />
                     {app.applicationFees > 0 &&
                       app.paymentStatus !== "paid" && (
-                        <ActionBtn icon={<CreditCard size={16} />} success />
+                        <ActionBtn
+                          icon={<CreditCard size={16} />}
+                          success
+                          onClick={() => handlePayNow(app._id)}
+                        />
                       )}
                   </div>
                 </td>

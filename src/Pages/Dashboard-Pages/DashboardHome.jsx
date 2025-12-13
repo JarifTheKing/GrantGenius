@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
+import useAxios from "../../Hooks/useAxios";
 import { motion } from "framer-motion";
 import { Bars } from "react-loader-spinner";
 import { FileCheck2, Clock, Loader2, BadgeCheck } from "lucide-react";
@@ -14,6 +15,8 @@ const getGreeting = () => {
 
 const DashboardHome = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxios();
+
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
@@ -24,19 +27,37 @@ const DashboardHome = () => {
 
   // ================= LOAD & CALCULATE =================
   useEffect(() => {
-    setTimeout(() => {
-      const courses = JSON.parse(localStorage.getItem("myCourses")) || [];
+    if (!user?.email) return;
 
-      setStats({
-        total: courses.length,
-        pending: courses.filter((c) => c.status === "Pending").length,
-        processing: courses.filter((c) => c.status === "Processing").length,
-        approved: courses.filter((c) => c.status === "Approved").length,
-      });
+    const fetchApplications = async () => {
+      try {
+        const res = await axiosSecure.get(
+          `/my-applications?email=${user.email}`
+        );
 
-      setLoading(false);
-    }, 600);
-  }, []);
+        const applications = Array.isArray(res.data) ? res.data : [];
+
+        setStats({
+          total: applications.length,
+          pending: applications.filter(
+            (app) => app.applicationStatus === "pending"
+          ).length,
+          processing: applications.filter(
+            (app) => app.applicationStatus === "processing"
+          ).length,
+          approved: applications.filter(
+            (app) => app.applicationStatus === "approved"
+          ).length,
+        });
+      } catch (error) {
+        console.error("DASHBOARD DATA ERROR:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, [user, axiosSecure]);
 
   // ================= LOADER =================
   if (loading) {
@@ -62,7 +83,7 @@ const DashboardHome = () => {
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="relative  overflow-hidden rounded-3xl bg-gradient-to-r from-primary/90 to-secondary/90 p-10 text-white shadow-2xl"
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary/90 to-secondary/90 p-10 text-white shadow-2xl"
       >
         <div className="relative z-10">
           <h2 className="text-3xl font-bold">
@@ -95,7 +116,7 @@ const DashboardHome = () => {
       </motion.div>
 
       {/* ================= STATS ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Applied"
           count={stats.total}

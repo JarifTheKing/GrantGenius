@@ -5,6 +5,7 @@ import Navbar from "../Components/Nav/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { Bars } from "react-loader-spinner";
 import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
+import { FaRegCreditCard } from "react-icons/fa";
 
 const DashboardLayout = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -123,7 +124,7 @@ const DashboardLayout = () => {
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing"
+                    className="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing"
                   >
                     <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
                     <path d="M14 2v5a1 1 0 0 0 1 1h5" />
@@ -134,6 +135,32 @@ const DashboardLayout = () => {
 
                   <span className="is-drawer-close:hidden">
                     My Applications
+                  </span>
+                </Link>
+              </li>
+
+              {/* Payment History */}
+              <li>
+                <Link
+                  to="payment-history"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="payment-history"
+                >
+                  {/* <img
+                    width="22"
+                    height="22"
+                    src="https://img.icons8.com/lollipop/48/bank-card-front-side.png"
+                    alt="bank-card-front-side"
+                  /> */}
+                  <img
+                    width="22"
+                    height="22"
+                    src="https://img.icons8.com/ios/50/bank-card-front-side--v1.png"
+                    alt="bank-card-front-side--v1"
+                  />
+
+                  <span className="is-drawer-close:hidden">
+                    Payment History
                   </span>
                 </Link>
               </li>
