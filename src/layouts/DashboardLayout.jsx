@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet } from "react-router";
 import Navbar from "../Components/Nav/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { Bars } from "react-loader-spinner";
+import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
 
 const DashboardLayout = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,15 +51,20 @@ const DashboardLayout = () => {
             </label>
 
             <div className="px-4">
-              <div className="flex items-center gap-2 font-extrabold text-2xl text-secondary tracking-wide">
-                <img
-                  src="https://img.icons8.com/ios/50/google-scholar--v2.png"
-                  width="50"
-                />
-                <span className="text-3xl logo">GrantGenius</span>
-              </div>
+              <Link to="/">
+                <div className="flex items-center gap-2 font-extrabold text-2xl text-secondary tracking-wide">
+                  <img
+                    src="https://img.icons8.com/ios/50/google-scholar--v2.png"
+                    width="50"
+                  />
+                  <span className="text-3xl logo">GrantGenius</span>
+                </div>
+              </Link>
             </div>
           </nav>
+
+          {/* Home */}
+          {/* <DashboardHome></DashboardHome> */}
 
           {/* Main Page + Footer */}
           <div className="flex flex-col min-h-screen">
@@ -79,9 +85,9 @@ const DashboardLayout = () => {
               {/* Home */}
               <li>
                 <Link
-                  to="/"
+                  to="/dashboard/dashboard-home"
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Homepage"
+                  data-tip="Home Page"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -97,6 +103,38 @@ const DashboardLayout = () => {
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                   </svg>
                   <span className="is-drawer-close:hidden">Home</span>
+                </Link>
+              </li>
+
+              {/* My Applications */}
+              <li>
+                <Link
+                  to="my-applications"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My-Applications"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing"
+                  >
+                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                    <path d="M8 18v-2" />
+                    <path d="M12 18v-4" />
+                    <path d="M16 18v-6" />
+                  </svg>
+
+                  <span className="is-drawer-close:hidden">
+                    My Applications
+                  </span>
                 </Link>
               </li>
 

@@ -61,8 +61,8 @@ const Home = () => {
 
       {/* ======================= TOP SCHOLARSHIPS ======================= */}
       {!loading && !error && (
-        <section className="max-w-7xl mx-auto py-16 px-6 my-8 bg-gradient-to-br from-[#5a1163] via-[#d3b6d0] to-[#d95022] rounded-3xl">
-          <h2 className="text-4xl font-extrabold text-center mb-10 text-white bg-clip-text text-transparent">
+        <section className="max-w-7xl mx-auto py-16 px-6 my-8 bg-gray-200 rounded-3xl">
+          <h2 className="text-4xl font-extrabold text-center mb-10 text-secondary bg-clip-text ">
             🎓 Top Scholarships
           </h2>
 
@@ -305,7 +305,7 @@ const Home = () => {
       </section>
 
       {/* ===================== READY TO START YOUR JOURNEY =============== */}
-      <section className="py-20 px-6 my-16 bg-gradient-to-br from-[#d95022] via-[#d3b6d0] to-[#5a1163] text-white md:rounded-3xl">
+      <section className="py-20 px-6 my-16 bg-gray-200 text-secondary md:rounded-3xl">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -316,7 +316,7 @@ const Home = () => {
             Ready to Start Your Journey?
           </motion.h2>
 
-          <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">
             Your scholarship journey begins here. Explore opportunities, apply
             confidently, and unlock your future with the right guidance.
           </p>
@@ -329,7 +329,7 @@ const Home = () => {
             <Link
               to="/all-scholarships"
               className="inline-block px-10 py-3 rounded-xl text-lg font-semibold 
-        bg-white text-[#d95022] shadow-xl hover:shadow-2xl hover:-translate-y-1 
+        bg-primary text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 
         transition-all duration-300"
             >
               Explore Scholarships

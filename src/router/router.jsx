@@ -16,6 +16,10 @@ import UpdateScholarship from "../Pages/Dashboard-Pages/UpdateScholarship";
 import HowItWorks from "../Pages/How-It-Works/HowItWorks";
 import Blogs from "../Pages/Home/Blogs/Blogs";
 import ContactUs from "../Pages/Home/Contact/ContactUs";
+import MyCourses from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
+import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
+import MyApplications from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
+import Payment from "../Pages/Dashboard-Pages/Payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +60,7 @@ export const router = createBrowserRouter([
         path: "/blogs",
         element: <Blogs />,
       },
+
       {
         path: "/contact",
         element: <ContactUs />,
@@ -74,6 +79,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // DashBoard
   {
     path: "dashboard",
     element: (
@@ -82,6 +89,40 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "dashboard-home",
+        element: (
+          <PrivateRoute>
+            <DashboardHome></DashboardHome>,
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-applications",
+        element: (
+          <PrivateRoute>
+            <MyApplications />,
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "add-scholarship",
+        element: (
+          <PrivateRoute>
+            <AddScholarship></AddScholarship>,
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "payment",
+        element: (
+          <PrivateRoute>
+            <Payment></Payment>,
+          </PrivateRoute>
+        ),
+      },
+
       {
         path: "add-scholarship",
         element: (

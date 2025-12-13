@@ -88,12 +88,6 @@ const Navbar = () => {
               </li>
 
               <li>
-                <NavLink to="/about" className={activeLink}>
-                  About Us
-                </NavLink>
-              </li>
-
-              <li>
                 <NavLink to="/how-it-works" className={activeLink}>
                   How it Works
                 </NavLink>
@@ -107,6 +101,12 @@ const Navbar = () => {
               <li>
                 <NavLink to="/contact" className={activeLink}>
                   Contact Us
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/about" className={activeLink}>
+                  About Us
                 </NavLink>
               </li>
 
@@ -173,6 +173,7 @@ const Navbar = () => {
                 All Scholarships
               </NavLink>
             </li>
+
             <li>
               <NavLink to="/how-it-works" className={activeLink}>
                 How it Works
@@ -283,7 +284,7 @@ const Navbar = () => {
                 {/* DASHBOARD */}
                 <li>
                   <NavLink
-                    to="/dashboard"
+                    to="/dashboard/dashboard-home"
                     className={({ isActive }) =>
                       `btn w-full font-bold px-4 py-2 rounded-lg transition-all ${
                         isActive

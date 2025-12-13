@@ -105,7 +105,7 @@ const Register = () => {
         name: formDataInput.name,
         email: formDataInput.email,
         photoURL: imageURL,
-        role: "user",
+        role: "Student",
         createdAt: new Date(),
       });
 
@@ -133,7 +133,7 @@ const Register = () => {
           name: user.displayName,
           email: user.email,
           photoURL: user.photoURL,
-          role: "user",
+          role: "Student",
           createdAt: new Date(),
         });
 
