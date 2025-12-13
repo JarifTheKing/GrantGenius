@@ -6,13 +6,42 @@ import Footer from "../Components/Footer/Footer";
 import { Bars } from "react-loader-spinner";
 import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
 import { FaRegCreditCard } from "react-icons/fa";
+import { LogOut } from "lucide-react";
+import useAuth from "../Hooks/useAuth";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const DashboardLayout = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
 
   // You can trigger loader like this wherever needed:
   // setIsLoading(true);
   // setTimeout(() => setIsLoading(false), 2000);
+
+  // Handle Log-Out
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, Logout",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await logOut();
+        Swal.fire("Logged out", "See you again!", "success");
+        navigate("/");
+      } catch (error) {
+        Swal.fire("Error", "Failed to logout", "error");
+      }
+    }
+  };
 
   return (
     <div className="relative">
@@ -28,7 +57,7 @@ const DashboardLayout = () => {
 
         <div className="drawer-content">
           {/* Navbar */}
-          <nav className="navbar w-full bg-base-300">
+          <nav className="navbar   w-full sticky top-0 z-50 backdrop-blur-xl bg-white/70 border border-primary/20 shadow-md rounded-3xl px-4 py-0 mt-3">
             <label
               htmlFor="my-drawer-4"
               aria-label="open sidebar"
@@ -81,7 +110,75 @@ const DashboardLayout = () => {
         <div className="drawer-side is-drawer-close:overflow-visible">
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
-          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64 ">
+            {/* ===== USER PROFILE ===== */}
+            <ul className="w-full   pt-5 px-3">
+              <li>
+                <div
+                  className="
+        group w-full
+        flex flex-col items-center
+        gap-3
+        px-3 py-4
+        rounded-2xl
+        hover:bg-base-300
+        transition-all duration-300
+        is-drawer-close:tooltip is-drawer-close:tooltip-right
+      "
+                  data-tip={user?.displayName || "Profile"}
+                >
+                  {/* ===== AVATAR ===== */}
+                  <div className="relative">
+                    <div
+                      className="
+            w-14 h-14
+            rounded-full
+            bg-gradient-to-br from-primary to-secondary
+            p-[2px]
+            shadow-md
+          "
+                    >
+                      <img
+                        src={
+                          user?.photoURL ||
+                          "https://img.icons8.com/3d-fluent/100/user-2.png"
+                        }
+                        alt="User"
+                        className="
+              w-full h-full
+              rounded-full
+              object-cover
+              bg-white
+            "
+                      />
+                    </div>
+
+                    {/* Online dot (optional, remove if not needed) */}
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-base-200 rounded-full"></span>
+                  </div>
+
+                  {/* ===== USER INFO (HIDDEN WHEN COLLAPSED) ===== */}
+                  <div className="text-center is-drawer-close:hidden space-y-1">
+                    <p className="text-lg font-bold text-secondary truncate max-w-[160px]">
+                      {user?.displayName || "Guest User"}
+                    </p>
+
+                    <span
+                      className="
+            inline-block
+            px-3 py-0.5
+            text-sm font-semibold
+            rounded-full
+            bg-primary/10 text-primary
+          "
+                    >
+                      {user?.role || "Student"}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
             <ul className="menu w-full grow">
               {/* Home */}
               <li>
@@ -232,6 +329,70 @@ const DashboardLayout = () => {
                     <circle cx="7" cy="7" r="3"></circle>
                   </svg>
                   <span className="is-drawer-close:hidden">Settings</span>
+                </button>
+              </li>
+            </ul>
+
+            {/* ===== END ===== */}
+            <ul className="w-full border-t border-gray-300/40 pt-4 px-2 space-y-2">
+              {/* ===== MY PROFILE ===== */}
+              <li>
+                <Link
+                  to="/profile"
+                  className="
+      w-full flex items-center bg-primary/20
+      px-2 py-0
+      rounded-xl
+      hover:bg-secondary/20
+      transition-all duration-200
+      is-drawer-close:tooltip is-drawer-close:tooltip-right
+    "
+                  data-tip="My Profile"
+                >
+                  {/* ICON (always centered) */}
+                  <div className="w-10 h-10 flex items-center justify-center rounded-lg">
+                    <img
+                      src="https://img.icons8.com/ios-filled/50/user-male-circle.png"
+                      alt="Profile"
+                      className="w-5 h-5 opacity-80"
+                    />
+                  </div>
+
+                  {/* TEXT (open drawer only) */}
+                  <div className="ml-3 is-drawer-close:hidden">
+                    <p className="text-lg font-bold text-secondary">
+                      My Profile
+                    </p>
+                    <p className="text-xs text-gray-500">View & edit account</p>
+                  </div>
+                </Link>
+              </li>
+
+              {/* ===== LOGOUT ===== */}
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="
+      w-full flex items-center text-lg font-bold
+      px-2 py-1
+      bg-red-700
+      rounded-xl
+      hover:bg-red-100
+      text-white
+      transition-all duration-200
+      is-drawer-close:tooltip is-drawer-close:tooltip-right
+    "
+                  data-tip="Logout"
+                >
+                  {/* ICON */}
+                  <div className="w-10 h-10 flex items-center justify-center rounded-lg">
+                    <LogOut size={18} />
+                  </div>
+
+                  {/* TEXT */}
+                  <span className="ml-3 is-drawer-close:hidden font-semibold">
+                    Logout
+                  </span>
                 </button>
               </li>
             </ul>
