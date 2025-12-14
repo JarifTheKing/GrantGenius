@@ -2,76 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { Eye, Pencil, Trash2, CreditCard } from "lucide-react";
-import useAxios from "../../../Hooks/useAxios";
+// import useAxios from "../../../Hooks/useAxios";
 import useAuth from "../../../Hooks/useAuth";
-import { Link } from "react-router";
+import useAxiosSecure from "../../../Hooks/UseAxiosSecure";
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   // ================= FETCH APPLICATIONS =================
-  // useEffect(() => {
-  //   if (!user?.email) {
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const fetchApplications = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       const res = await axiosSecure.get(
-  //         `/my-applications?email=${user.email}`
-  //       );
-
-  //       setApplications(Array.isArray(res.data) ? res.data : []);
-  //     } catch (error) {
-  //       console.error("LOAD APPLICATIONS ERROR:", error);
-  //       Swal.fire("Error", "Failed to load applications", "error");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchApplications();
-  // }, [user, axiosSecure]);
-
   useEffect(() => {
     if (!user?.email) return;
 
     const fetchApplications = async () => {
       try {
         setLoading(true);
-
         const res = await axiosSecure.get(
           `/my-applications?email=${user.email}`
         );
-
-        const apps = Array.isArray(res.data) ? res.data : [];
-
-        // 🔥 AUTO SYNC PAID → PROCESSING
-        await Promise.all(
-          apps.map((app) => {
-            if (
-              app.paymentStatus === "paid" &&
-              app.applicationStatus === "pending"
-            ) {
-              return axiosSecure.patch(`/payment-success/${app._id}`);
-            }
-            return null;
-          })
-        );
-
-        // 🔁 REFETCH UPDATED DATA
-        const updatedRes = await axiosSecure.get(
-          `/my-applications?email=${user.email}`
-        );
-
-        setApplications(updatedRes.data);
+        setApplications(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("LOAD APPLICATIONS ERROR:", error);
         Swal.fire("Error", "Failed to load applications", "error");
@@ -81,7 +33,7 @@ const MyApplications = () => {
     };
 
     fetchApplications();
-  }, [user, axiosSecure]);
+  }, [user?.email, axiosSecure]);
 
   // ================= PAYMENT HANDLER =================
   const handlePayNow = async (applicationId) => {
@@ -91,7 +43,7 @@ const MyApplications = () => {
       });
 
       if (res.data?.url) {
-        window.location.href = res.data.url; // ✅ safer than new tab
+        window.location.href = res.data.url; // Stripe redirect
       }
     } catch (error) {
       console.error("PAY NOW ERROR:", error);
@@ -122,9 +74,7 @@ const MyApplications = () => {
       if (result.isConfirmed) {
         try {
           await axiosSecure.delete(`/my-applications/${id}`);
-
           setApplications((prev) => prev.filter((item) => item._id !== id));
-
           Swal.fire("Removed!", "Application removed successfully.", "success");
         } catch (error) {
           console.error("DELETE ERROR:", error);
@@ -188,7 +138,7 @@ const MyApplications = () => {
             {applications.map((app) => (
               <tr
                 key={app._id}
-                className="border border-primary/20 last:border-none hover:bg-gray-50 transition"
+                className="border border-primary/20 hover:bg-gray-50 transition"
               >
                 {/* UNIVERSITY */}
                 <td className="px-6 py-4">
@@ -228,14 +178,14 @@ const MyApplications = () => {
                         : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {app.applicationStatus || "pending"}
+                    {app.applicationStatus}
                   </span>
                 </td>
 
                 {/* PAYMENT */}
                 <td>
                   {app.applicationFees === 0 ? (
-                    <span className="px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
+                    <span className="px-3 py-1 rounded-full text-xs bg-gray-100">
                       N/A
                     </span>
                   ) : app.paymentStatus === "paid" ? (
@@ -245,7 +195,7 @@ const MyApplications = () => {
                   ) : (
                     <button
                       onClick={() => handlePayNow(app._id)}
-                      className="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700 hover:bg-orange-200 transition"
+                      className="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700 hover:bg-orange-200"
                     >
                       Pay Now
                     </button>

@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { Bars } from "react-loader-spinner";
-import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const AddScholarship = () => {
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   const {

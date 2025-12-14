@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useLoaderData } from "react-router";
 import Banner from "../Banner/Banner";
 import { Bars } from "react-loader-spinner";
-import useAxios from "../../Hooks/useAxios";
+// import useAxios from "../../Hooks/useAxios";
 import img1 from "../../assets/Story/Boy-1.jpg";
 import img2 from "../../assets/Story/Boy-2.jpg";
 import img3 from "../../assets/Story/Girl.jpg";
@@ -14,13 +14,14 @@ import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 // import Review from "./Review/Review";
 
 const Home = () => {
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   // const reviewData = useLoaderData();
 
   useEffect(() => {

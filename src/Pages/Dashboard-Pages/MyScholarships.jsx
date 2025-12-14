@@ -3,11 +3,11 @@ import { Link } from "react-router";
 import { Bars } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const MyScholarships = () => {
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   const [myScholarships, setMyScholarships] = useState([]);

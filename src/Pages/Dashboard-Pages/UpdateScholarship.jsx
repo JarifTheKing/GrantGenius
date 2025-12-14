@@ -3,12 +3,13 @@ import { useParams, useNavigate } from "react-router";
 import { Bars } from "react-loader-spinner";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import useAxios from "../../Hooks/useAxios";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
+// import useAxios from "../../Hooks/useAxios";
 
 const UpdateScholarship = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({

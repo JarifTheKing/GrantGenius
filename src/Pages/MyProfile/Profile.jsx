@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-import useAxios from "../../Hooks/useAxios";
+// import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import {
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const Profile = () => {
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { user, updateUserProfile, logOut } = useAuth();
   const navigate = useNavigate();
 

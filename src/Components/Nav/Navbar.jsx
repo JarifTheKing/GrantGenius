@@ -298,7 +298,7 @@ const Navbar = () => {
                 </li>
 
                 {/* PROFILE */}
-                <li>
+                {/* <li>
                   <NavLink
                     to="/profile"
                     className={({ isActive }) =>
@@ -311,7 +311,7 @@ const Navbar = () => {
                   >
                     My Profile
                   </NavLink>
-                </li>
+                </li> */}
 
                 {/* LOGOUT */}
                 <li>

@@ -377,7 +377,7 @@ const DashboardLayout = () => {
       px-2 py-1
       bg-red-700
       rounded-xl
-      hover:bg-red-100
+      hover:bg-secondary
       text-white
       transition-all duration-200
       is-drawer-close:tooltip is-drawer-close:tooltip-right

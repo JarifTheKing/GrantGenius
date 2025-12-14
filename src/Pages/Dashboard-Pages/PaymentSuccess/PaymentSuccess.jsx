@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from "react-router";
 import { useEffect } from "react";
-import useAxios from "../../../Hooks/useAxios";
+import useAxiosSecure from "../../../Hooks/UseAxiosSecure";
+// import useAxios from "../../../Hooks/useAxios";
 
 const PaymentSuccess = () => {
   const { id } = useParams();
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
   useEffect(() => {

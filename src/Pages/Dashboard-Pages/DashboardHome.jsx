@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
-import useAxios from "../../Hooks/useAxios";
+// import useAxios from "../../Hooks/useAxios";
 import { motion } from "framer-motion";
 import { Bars } from "react-loader-spinner";
 import { FileCheck2, Clock, Loader2, BadgeCheck } from "lucide-react";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 // ================= GREETING =================
 const getGreeting = () => {
@@ -15,7 +16,7 @@ const getGreeting = () => {
 
 const DashboardHome = () => {
   const { user } = useAuth();
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({

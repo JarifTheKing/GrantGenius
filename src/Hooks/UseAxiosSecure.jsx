@@ -50,3 +50,56 @@
 // };
 
 // export default useAxiosSecure;
+
+import axios from "axios";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import useAuth from "./useAuth";
+
+const axiosSecure = axios.create({
+  baseURL: "http://localhost:3000",
+});
+
+const useAxiosSecure = () => {
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // ================= REQUEST INTERCEPTOR =================
+    const requestInterceptor = axiosSecure.interceptors.request.use(
+      (config) => {
+        if (user?.accessToken) {
+          config.headers.authorization = `Bearer ${user.accessToken}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // ================= RESPONSE INTERCEPTOR =================
+    const responseInterceptor = axiosSecure.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const status = error?.response?.status;
+
+        if (status === 401 || status === 403) {
+          console.warn("Unauthorized — logging out");
+          await logOut();
+          navigate("/login");
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    // ================= CLEANUP =================
+    return () => {
+      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.response.eject(responseInterceptor);
+    };
+  }, [user?.accessToken, logOut, navigate]);
+
+  return axiosSecure;
+};
+
+export default useAxiosSecure;

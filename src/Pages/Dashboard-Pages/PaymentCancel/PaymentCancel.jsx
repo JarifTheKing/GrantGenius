@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from "react-router";
 import { XCircle, RotateCcw, LayoutDashboard } from "lucide-react";
 import { motion } from "framer-motion";
-import useAxios from "../../../Hooks/useAxios";
+// import useAxios from "../../../Hooks/useAxios";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../Hooks/UseAxiosSecure";
 
 const PaymentCancel = () => {
-  const { id } = useParams(); // ✅ applicationId
+  const { id } = useParams();
   const navigate = useNavigate();
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   // ================= PAYMENT HANDLER =================
   const handlePayNow = async () => {
