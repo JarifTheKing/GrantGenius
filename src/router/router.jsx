@@ -23,6 +23,9 @@ import Payment from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
 import PaymentHistory from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
 import PaymentSuccess from "../Pages/Dashboard-Pages/PaymentSuccess/PaymentSuccess";
 import PaymentCancel from "../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel";
+import BeAModerator from "../Pages/ModeratorPages/BeModerator/BeAModerator";
+import AdminRoute from "./AdminRoute";
+import ModeratorRequest from "../Pages/AdminPages/ModeratorRequ/ModeratorRequest";
 
 export const router = createBrowserRouter([
   {
@@ -76,6 +79,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
       {
         path: "/about",
         element: <About />,
@@ -85,7 +89,7 @@ export const router = createBrowserRouter([
 
   // DashBoard
   {
-    path: "dashboard",
+    path: "/dashboard",
     element: (
       <PrivateRoute>
         <DashboardLayout></DashboardLayout>
@@ -96,7 +100,7 @@ export const router = createBrowserRouter([
         path: "dashboard-home",
         element: (
           <PrivateRoute>
-            <DashboardHome></DashboardHome>,
+            <DashboardHome></DashboardHome>
           </PrivateRoute>
         ),
       },
@@ -104,15 +108,32 @@ export const router = createBrowserRouter([
         path: "my-applications",
         element: (
           <PrivateRoute>
-            <MyApplications />,
+            <MyApplications />
           </PrivateRoute>
         ),
       },
       {
-        path: "add-scholarship",
+        path: "moderator-requests",
+        element: (
+          <AdminRoute>
+            <ModeratorRequest />
+          </AdminRoute>
+        ),
+      },
+
+      // {
+      //   path: "add-scholarship",
+      //   element: (
+      //     <PrivateRoute>
+      //       <AddScholarship></AddScholarship>
+      //     </PrivateRoute>
+      //   ),
+      // },
+      {
+        path: "be-moderator",
         element: (
           <PrivateRoute>
-            <AddScholarship></AddScholarship>,
+            <BeAModerator />
           </PrivateRoute>
         ),
       },
@@ -121,7 +142,7 @@ export const router = createBrowserRouter([
         path: "payment-history",
         element: (
           <PrivateRoute>
-            <PaymentHistory></PaymentHistory>,
+            <PaymentHistory></PaymentHistory>
           </PrivateRoute>
         ),
       },
@@ -147,7 +168,7 @@ export const router = createBrowserRouter([
         path: "add-scholarship",
         element: (
           <PrivateRoute>
-            <AddScholarship></AddScholarship>,
+            <AddScholarship></AddScholarship>
           </PrivateRoute>
         ),
       },
@@ -155,7 +176,7 @@ export const router = createBrowserRouter([
         path: "my-scholarship",
         element: (
           <PrivateRoute>
-            <MyScholarships></MyScholarships>,
+            <MyScholarships></MyScholarships>
           </PrivateRoute>
         ),
       },
@@ -163,7 +184,7 @@ export const router = createBrowserRouter([
         path: "update-scholarship/:id",
         element: (
           <PrivateRoute>
-            <UpdateScholarship></UpdateScholarship>,
+            <UpdateScholarship></UpdateScholarship>
           </PrivateRoute>
         ),
       },

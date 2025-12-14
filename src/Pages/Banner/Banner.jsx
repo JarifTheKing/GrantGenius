@@ -7,6 +7,7 @@ import { Bars } from "react-loader-spinner";
 import bannerImg1 from "../../assets/New-Banner/img-1.jpg";
 import bannerImg2 from "../../assets/New-Banner/img-2.jpg";
 import bannerImg3 from "../../assets/New-Banner/img-3.jpg";
+import { Link } from "react-router";
 
 const Banner = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -70,17 +71,19 @@ const Banner = () => {
               Explore thousands of local & international scholarship
               opportunities.
             </motion.p>
-            <motion.button
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              transition={{ duration: 1.1 }}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.96 }}
-              className="mt-6 px-6 py-3 bg-primary text-white font-semibold rounded-full shadow-md"
-            >
-              Search Scholarship
-            </motion.button>
+            <Link to="/all-scholarships">
+              <motion.button
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 1.1 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.96 }}
+                className="mt-6 px-6 py-3 bg-primary text-white font-semibold rounded-full shadow-md"
+              >
+                Search Scholarship
+              </motion.button>
+            </Link>
           </div>
         </div>
 

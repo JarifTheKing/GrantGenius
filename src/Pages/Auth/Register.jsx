@@ -33,7 +33,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  // ⭐ PAGE LOAD LOADER
+  //  PAGE LOAD LOADER
   const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {

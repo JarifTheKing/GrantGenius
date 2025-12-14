@@ -125,7 +125,7 @@ const DashboardLayout = () => {
         transition-all duration-300
         is-drawer-close:tooltip is-drawer-close:tooltip-right
       "
-                  data-tip={user?.displayName || "Profile"}
+                  // data-tip={user?.displayName || "Profile"}
                 >
                   {/* ===== AVATAR ===== */}
                   <div className="relative">
@@ -290,6 +290,23 @@ const DashboardLayout = () => {
                 </Link>
               </li>
 
+              {/* Be Moderator */}
+              <li>
+                <Link
+                  to="be-moderator"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Be Moderator"
+                >
+                  <img
+                    width="18"
+                    height="18"
+                    src="https://img.icons8.com/ios/50/crown.png"
+                    alt="crown"
+                  />
+                  <span className="is-drawer-close:hidden">Be Moderator</span>
+                </Link>
+              </li>
+
               {/* My Scholarship */}
               <li>
                 <Link
@@ -374,7 +391,7 @@ const DashboardLayout = () => {
                   onClick={handleLogout}
                   className="
       w-full flex items-center text-lg font-bold
-      px-2 py-1
+      px-2 
       bg-red-700
       rounded-xl
       hover:bg-secondary
