@@ -34,6 +34,7 @@ import ManageApplications from "../Pages/ModeratorPages/ManageApplications/Manag
 import AddReview from "../Pages/Dashboard-Pages/AddReview/AddReview";
 import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
 import Analytics from "../Pages/AdminPages/Analytics/Analytics";
+import ApplicationReview from "../Pages/ModeratorPages/ApplicationReview/ApplicationReview";
 
 export const router = createBrowserRouter([
   {
@@ -240,6 +241,14 @@ export const router = createBrowserRouter([
         element: (
           <ModeratorRoute>
             <ApplicationDetails />
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "application-review/:id",
+        element: (
+          <ModeratorRoute>
+            <ApplicationReview />
           </ModeratorRoute>
         ),
       },

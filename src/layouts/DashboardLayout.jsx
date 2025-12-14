@@ -448,7 +448,7 @@ const DashboardLayout = () => {
                     <img
                       width="18"
                       height="18"
-                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      src="https://img.icons8.com/ios/50/request-service.png"
                       alt="scholarship"
                     />
                     <span className="is-drawer-close:hidden">
@@ -458,8 +458,29 @@ const DashboardLayout = () => {
                 </li>
               )}
 
+              {/* applications review */}
+              {/* {role === "moderator" && (
+                <li>
+                  <Link
+                    to="application-review"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="application-review"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      application-review
+                    </span>
+                  </Link>
+                </li>
+              )} */}
+
               {/* Application Details */}
-              {role === "moderator" && (
+              {/* {role === "moderator" && (
                 <li>
                   <Link
                     to={`application-details`}
@@ -477,7 +498,7 @@ const DashboardLayout = () => {
                     </span>
                   </Link>
                 </li>
-              )}
+              )} */}
 
               {/* Settings */}
               <li>
