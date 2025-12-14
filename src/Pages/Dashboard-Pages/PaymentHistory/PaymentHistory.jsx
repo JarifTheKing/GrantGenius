@@ -102,7 +102,10 @@ const PaymentHistory = () => {
 
                   {/* ✅ TRANSACTION ID FIXED */}
                   <td className="px-4 py-3 text-xs font-mono text-gray-600">
-                    {pay.transactionId || "—"}
+                    {pay.transactionId ||
+                      pay.paymentIntentId ||
+                      pay.stripeSessionId ||
+                      "—"}
                   </td>
 
                   <td className="px-4 py-3">

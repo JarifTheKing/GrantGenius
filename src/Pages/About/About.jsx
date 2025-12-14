@@ -30,7 +30,7 @@ const About = () => {
   }
 
   return (
-    <div className="py-20 px-4 md:px-10 bg-gradient-to-b from-gray-50 via-white to-gray-100">
+    <div className="py-20 px-4 md:px-10 bg-gradient-to-b from-gray-50 via-white to-gray-100 rounded-3xl">
       {/* ================= HERO SECTION ================= */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}

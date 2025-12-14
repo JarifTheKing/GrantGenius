@@ -1,5 +1,5 @@
 import { BadgePlus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import Navbar from "../Components/Nav/Navbar";
 import Footer from "../Components/Footer/Footer";
@@ -10,15 +10,42 @@ import { LogOut } from "lucide-react";
 import useAuth from "../Hooks/useAuth";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import useAxiosSecure from "../Hooks/UseAxiosSecure";
 
 const DashboardLayout = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user, logOut } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const [role, setRole] = useState("student");
 
   // You can trigger loader like this wherever needed:
   // setIsLoading(true);
   // setTimeout(() => setIsLoading(false), 2000);
+
+  // useEffect(() => {
+  //   if (user?.email) {
+  //     axiosSecure.get(`/users?email=${user.email}`).then((res) => {
+  //       if (res.data?.length > 0) {
+  //         setRole(res.data[0].role);
+  //       }
+  //     });
+  //   }
+  // }, [user, axiosSecure]);
+  useEffect(() => {
+    if (!user?.email) return;
+
+    axiosSecure
+      .get(`/users?email=${user.email}`)
+      .then((res) => {
+        if (res.data && res.data.length > 0) {
+          setRole(res.data[0].role); // student | moderator | admin
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch role", err);
+      });
+  }, [user?.email, axiosSecure]);
 
   // Handle Log-Out
   const handleLogout = async () => {
@@ -163,16 +190,8 @@ const DashboardLayout = () => {
                       {user?.displayName || "Guest User"}
                     </p>
 
-                    <span
-                      className="
-            inline-block
-            px-3 py-0.5
-            text-sm font-semibold
-            rounded-full
-            bg-primary/10 text-primary
-          "
-                    >
-                      {user?.role || "Student"}
+                    <span className="px-3 py-0.5 text-sm font-semibold rounded-full bg-primary/10 text-primary">
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
                     </span>
                   </div>
                 </div>
@@ -205,124 +224,260 @@ const DashboardLayout = () => {
               </li>
 
               {/* My Applications */}
-              <li>
-                <Link
-                  to="my-applications"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My-Applications"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing"
+              {role === "student" && (
+                <li>
+                  <Link
+                    to="my-applications"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My-Applications"
                   >
-                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
-                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
-                    <path d="M8 18v-2" />
-                    <path d="M12 18v-4" />
-                    <path d="M16 18v-6" />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing"
+                    >
+                      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                      <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                      <path d="M8 18v-2" />
+                      <path d="M12 18v-4" />
+                      <path d="M16 18v-6" />
+                    </svg>
 
-                  <span className="is-drawer-close:hidden">
-                    My Applications
-                  </span>
-                </Link>
-              </li>
+                    <span className="is-drawer-close:hidden">
+                      My Applications
+                    </span>
+                  </Link>
+                </li>
+              )}
 
               {/* Payment History */}
-              <li>
-                <Link
-                  to="payment-history"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="payment-history"
-                >
-                  {/* <img
+              {role === "student" && (
+                <li>
+                  <Link
+                    to="payment-history"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="payment-history"
+                  >
+                    {/* <img
                     width="22"
                     height="22"
                     src="https://img.icons8.com/lollipop/48/bank-card-front-side.png"
                     alt="bank-card-front-side"
                   /> */}
-                  <img
-                    width="22"
-                    height="22"
-                    src="https://img.icons8.com/ios/50/bank-card-front-side--v1.png"
-                    alt="bank-card-front-side--v1"
-                  />
+                    <img
+                      width="22"
+                      height="22"
+                      src="https://img.icons8.com/ios/50/bank-card-front-side--v1.png"
+                      alt="bank-card-front-side--v1"
+                    />
 
-                  <span className="is-drawer-close:hidden">
-                    Payment History
-                  </span>
-                </Link>
-              </li>
+                    <span className="is-drawer-close:hidden">
+                      Payment History
+                    </span>
+                  </Link>
+                </li>
+              )}
 
               {/* Add Scholarship */}
-              <li>
-                <Link
-                  to="add-scholarship"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Add Scholarship"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+              {role === "admin" && (
+                <li>
+                  <Link
+                    to="add-scholarship"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Add Scholarship"
                   >
-                    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-                    <line x1="12" x2="12" y1="8" y2="16" />
-                    <line x1="8" x2="16" y1="12" y2="12" />
-                  </svg>
-                  <span className="is-drawer-close:hidden">
-                    Add Scholarship
-                  </span>
-                </Link>
-              </li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                      <line x1="12" x2="12" y1="8" y2="16" />
+                      <line x1="8" x2="16" y1="12" y2="12" />
+                    </svg>
+                    <span className="is-drawer-close:hidden">
+                      Add Scholarship
+                    </span>
+                  </Link>
+                </li>
+              )}
 
               {/* Be Moderator */}
-              <li>
-                <Link
-                  to="be-moderator"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Be Moderator"
-                >
-                  <img
-                    width="18"
-                    height="18"
-                    src="https://img.icons8.com/ios/50/crown.png"
-                    alt="crown"
-                  />
-                  <span className="is-drawer-close:hidden">Be Moderator</span>
-                </Link>
-              </li>
+              {role === "student" && (
+                <li>
+                  <Link
+                    to="be-moderator"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Be Moderator"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/pull-request.png"
+                      alt="crown"
+                    />
+                    <span className="is-drawer-close:hidden">Be Moderator</span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Users Management */}
+              {role === "admin" && (
+                <li>
+                  <Link
+                    to="users-management"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Users Management"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/parakeet-line/48/group.png"
+                      alt="crown"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      Users Management
+                    </span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Approve-moderator */}
+              {role === "admin" && (
+                <li>
+                  <Link
+                    to="approve-moderator"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Approve Moderator"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios/50/crown.png"
+                      alt="crown"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      Approve Moderator
+                    </span>
+                  </Link>
+                </li>
+              )}
 
               {/* My Scholarship */}
-              <li>
-                <Link
-                  to="my-scholarship"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Scholarship"
-                >
-                  <img
-                    width="18"
-                    height="18"
-                    src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
-                    alt="scholarship"
-                  />
-                  <span className="is-drawer-close:hidden">My Scholarship</span>
-                </Link>
-              </li>
+              {role === "admin" && (
+                <li>
+                  <Link
+                    to="my-scholarship"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Scholarship"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      My Scholarship
+                    </span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Admin Analytics */}
+              {role === "admin" && (
+                <li>
+                  <Link
+                    to="analytics"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Admin Analytics"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios/50/user-shield.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      Admin Analytics
+                    </span>
+                  </Link>
+                </li>
+              )}
+
+              {/* All Reviews */}
+              {role === "moderator" && (
+                <li>
+                  <Link
+                    to="all-reviews"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="All Reviews"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">All Reviews</span>
+                  </Link>
+                </li>
+              )}
+
+              {/* manage-applications */}
+              {role === "moderator" && (
+                <li>
+                  <Link
+                    to="manage-applications"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Manage Applications"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      Manage Applications
+                    </span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Application Details */}
+              {role === "moderator" && (
+                <li>
+                  <Link
+                    to={`application-details`}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Application Details"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">
+                      Application Details
+                    </span>
+                  </Link>
+                </li>
+              )}
 
               {/* Settings */}
               <li>

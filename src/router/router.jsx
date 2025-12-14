@@ -26,6 +26,14 @@ import PaymentCancel from "../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel"
 import BeAModerator from "../Pages/ModeratorPages/BeModerator/BeAModerator";
 import AdminRoute from "./AdminRoute";
 import ModeratorRequest from "../Pages/AdminPages/ModeratorRequ/ModeratorRequest";
+import ApproveModerator from "../Pages/AdminPages/ApproveModerator/ApproveModerator";
+import UsersManagement from "../Pages/Dashboard-Pages/UsersManagement/UsersManagement";
+import AllReviews from "../Pages/ModeratorPages/AllReviews/AllReviews";
+import ModeratorRoute from "./ModeratorRoute";
+import ManageApplications from "../Pages/ModeratorPages/ManageApplications/ManageApplications";
+import AddReview from "../Pages/Dashboard-Pages/AddReview/AddReview";
+import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
+import Analytics from "../Pages/AdminPages/Analytics/Analytics";
 
 export const router = createBrowserRouter([
   {
@@ -121,6 +129,24 @@ export const router = createBrowserRouter([
         ),
       },
 
+      {
+        path: "approve-moderator",
+        element: (
+          <PrivateRoute>
+            <ApproveModerator />,
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "users-management",
+        element: (
+          <PrivateRoute>
+            <UsersManagement />,
+          </PrivateRoute>
+        ),
+      },
+
       // {
       //   path: "add-scholarship",
       //   element: (
@@ -186,6 +212,43 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <UpdateScholarship></UpdateScholarship>
           </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "all-reviews",
+        element: (
+          <ModeratorRoute>
+            <AllReviews />
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "manage-applications",
+        element: (
+          <ModeratorRoute>
+            <ManageApplications />
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "add-review/:id",
+        element: <AddReview />,
+      },
+      {
+        path: "application-details/:id",
+        element: (
+          <ModeratorRoute>
+            <ApplicationDetails />
+          </ModeratorRoute>
+        ),
+      },
+      {
+        path: "analytics",
+        element: (
+          <AdminRoute>
+            <Analytics />
+          </AdminRoute>
         ),
       },
     ],

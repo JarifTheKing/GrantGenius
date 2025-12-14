@@ -105,7 +105,7 @@ const Register = () => {
         name: formDataInput.name,
         email: formDataInput.email,
         photoURL: imageURL,
-        role: "Student",
+        // role: "Student",
         createdAt: new Date(),
       });
 

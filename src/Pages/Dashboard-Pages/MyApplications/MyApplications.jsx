@@ -5,6 +5,8 @@ import { Eye, Pencil, Trash2, CreditCard } from "lucide-react";
 // import useAxios from "../../../Hooks/useAxios";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/UseAxiosSecure";
+import AddReview from "../AddReview/AddReview";
+import { Link } from "react-router";
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -129,6 +131,7 @@ const MyApplications = () => {
               <th>Fees</th>
               <th>Status</th>
               <th>Payment</th>
+              <th>Add Review</th>
               <th>Feedback</th>
               <th className="text-center px-6">Actions</th>
             </tr>
@@ -202,6 +205,25 @@ const MyApplications = () => {
                   )}
                 </td>
 
+                {/* Review */}
+                <td className="text-gray-400 text-xs">
+                  {app.applicationStatus === "approved" &&
+                  (app.applicationFees === 0 ||
+                    app.paymentStatus === "paid") ? (
+                    <Link
+                      to={`/scholarship/${app.scholarshipId}/review`}
+                      className="text-primary hover:underline"
+                    >
+                      Add Review
+                    </Link>
+                  ) : (
+                    <span className="text-gray-400 text-xs">
+                      {app.applicationStatus !== "approved"
+                        ? "Not approved"
+                        : "Payment required"}
+                    </span>
+                  )}
+                </td>
                 {/* FEEDBACK */}
                 <td className="text-gray-400 text-xs">
                   {app.feedback || "N/A"}
