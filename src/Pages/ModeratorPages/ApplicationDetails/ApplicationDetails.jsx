@@ -13,7 +13,7 @@ const ApplicationDetails = () => {
   useEffect(() => {
     const loadApplication = async () => {
       try {
-        const res = await axiosSecure.get(`/applications/${id}`);
+        const res = await axiosSecure.get(`/applications/moderator/${id}`);
         setApplication(res.data);
       } catch (err) {
         console.error(err);
