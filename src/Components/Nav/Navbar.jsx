@@ -268,13 +268,12 @@ const Navbar = () => {
           {user && (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} className="cursor-pointer">
-                <img
-                  src={
-                    user?.photoURL ||
-                    "https://img.icons8.com/office/40/gender-neutral-user.png"
-                  }
-                  className="w-14 h-14 rounded-full border border-blue-300"
-                />
+                {user && (
+                  <img
+                    src={user?.photoURL}
+                    className="w-14 h-14 rounded-full border border-blue-300"
+                  />
+                )}
               </div>
 
               <ul

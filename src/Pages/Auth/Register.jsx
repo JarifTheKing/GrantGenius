@@ -7,11 +7,12 @@ import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import useAxios from "../../Hooks/useAxios";
+// import useAxios from "../../Hooks/useAxios";
 import { Bars } from "react-loader-spinner";
+import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const Register = () => {
-  const axiosSecure = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,

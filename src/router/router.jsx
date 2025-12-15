@@ -32,7 +32,7 @@ import AllReviews from "../Pages/ModeratorPages/AllReviews/AllReviews";
 import ModeratorRoute from "./ModeratorRoute";
 import ManageApplications from "../Pages/ModeratorPages/ManageApplications/ManageApplications";
 import AddReview from "../Pages/Dashboard-Pages/AddReview/AddReview";
-import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
+// import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
 import Analytics from "../Pages/AdminPages/Analytics/Analytics";
 import ApplicationReview from "../Pages/ModeratorPages/ApplicationReview/ApplicationReview";
 
@@ -56,7 +56,9 @@ export const router = createBrowserRouter([
         path: "/details-scholarship/:id",
         element: <DetailsScholarship />,
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/all-scholarship/${params.id}`),
+          fetch(
+            `https://grant-genius-server-one.vercel.app/all-scholarship/${params.id}`
+          ),
       },
 
       {
@@ -236,14 +238,14 @@ export const router = createBrowserRouter([
         path: "add-review/:id",
         element: <AddReview />,
       },
-      {
-        path: "application-details/:id",
-        element: (
-          <ModeratorRoute>
-            <ApplicationDetails />
-          </ModeratorRoute>
-        ),
-      },
+      // {
+      //   path: "application-details/:id",
+      //   element: (
+      //     <ModeratorRoute>
+      //       <ApplicationDetails />
+      //     </ModeratorRoute>
+      //   ),
+      // },
       {
         path: "application-review/:id",
         element: (

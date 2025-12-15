@@ -5,10 +5,12 @@ import Swal from "sweetalert2";
 import { Bars } from "react-loader-spinner";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/UseAxiosSecure";
+import { useNavigate } from "react-router";
 
 const AddScholarship = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -33,8 +35,10 @@ const AddScholarship = () => {
           text: "Scholarship has been added successfully.",
           icon: "success",
           confirmButtonColor: "#d95022",
+        }).then(() => {
+          reset();
+          navigate("/dashboard/my-scholarship");
         });
-        reset();
       } else {
         Swal.fire({
           title: "Error!",

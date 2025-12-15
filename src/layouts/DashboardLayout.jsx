@@ -376,7 +376,7 @@ const DashboardLayout = () => {
                 </li>
               )}
 
-              {/* My Scholarship */}
+              {/* Manage/My Scholarship */}
               {role === "admin" && (
                 <li>
                   <Link
@@ -391,7 +391,7 @@ const DashboardLayout = () => {
                       alt="scholarship"
                     />
                     <span className="is-drawer-close:hidden">
-                      My Scholarship
+                      Manage Scholarship
                     </span>
                   </Link>
                 </li>

@@ -4,7 +4,7 @@
 // import { useEffect } from "react";
 
 // const axiosInstance = axios.create({
-//   baseURL: "http://localhost:3000",
+//   baseURL: "https://grant-genius-server-one.vercel.app",
 // });
 
 // const useAxiosSecure = () => {
@@ -57,7 +57,7 @@ import { useNavigate } from "react-router";
 import useAuth from "./useAuth";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://grant-genius-server-one.vercel.app",
 });
 
 const useAxiosSecure = () => {

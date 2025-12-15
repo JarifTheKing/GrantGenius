@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
@@ -20,7 +18,9 @@ const AllScholarships = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/all-scholarship");
+        const res = await axios.get(
+          "https://grant-genius-server-one.vercel.app/all-scholarship"
+        );
 
         const data = Array.isArray(res.data) ? res.data : [];
 
