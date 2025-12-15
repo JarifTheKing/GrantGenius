@@ -131,47 +131,78 @@ const Home = () => {
 
       {/* ======================= SUCCESS STORIES ======================= */}
 
-      <section className="relative py-24 px-6 my-16 bg-gradient-to-br from-[#d95022] via-[#d3b6d0] to-[#5a1163] md:rounded-3xl overflow-hidden">
+      <section className="relative py-16 md:py-24 px-4 md:px-6 my-16 bg-gradient-to-br from-[#d95022] via-[#d3b6d0] to-[#5a1163] md:rounded-3xl overflow-hidden">
         {/* Soft Background Shapes */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-[#d95022]/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#5a1163]/10 rounded-full blur-[120px]"></div>
+        <div className="absolute top-0 left-0 w-48 md:w-72 h-48 md:h-72 bg-[#d95022]/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 right-0 w-48 md:w-72 h-48 md:h-72 bg-[#5a1163]/10 rounded-full blur-[120px]"></div>
 
         {/* Heading */}
-        <div className="text-center mb-16 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+        <div className="text-center mb-12 md:mb-16 relative z-10">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
             Our Students{" "}
-            <span className="text-transparent logo text-6xl bg-clip-text bg-gradient-to-r from-[#aa09e9] to-[#e96309]">
+            <span className="text-transparent logo text-4xl md:text-6xl bg-clip-text bg-gradient-to-r from-[#aa09e9] to-[#e96309]">
               Success Stories
             </span>
           </h2>
-          <p className="text-gray-300 mt-3 text-lg max-w-2xl mx-auto">
+
+          <p className="text-gray-300 mt-3 text-base md:text-lg max-w-2xl mx-auto px-2">
             Real stories from students who achieved their dreams with the help
             of our platform.
           </p>
         </div>
 
-        {/* Swiper Coverflow */}
+        {/* Swiper */}
         <div className="max-w-7xl mx-auto relative z-10">
           <Swiper
             effect={"coverflow"}
             grabCursor={true}
             loop={true}
             centeredSlides={true}
-            slidesPerView={3}
-            coverflowEffect={{
-              rotate: 30,
-              stretch: "50%",
-              depth: 200,
-              modifier: 1,
-              scale: 0.75,
-              slideShadows: true,
-            }}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
             }}
             pagination={true}
             modules={[Autoplay, EffectCoverflow, Pagination]}
+            breakpoints={{
+              0: {
+                slidesPerView: 1,
+                coverflowEffect: {
+                  rotate: 0,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 1,
+                  scale: 0.9,
+                },
+              },
+              640: {
+                slidesPerView: 1.3,
+                coverflowEffect: {
+                  rotate: 20,
+                  stretch: 0,
+                  depth: 150,
+                  scale: 0.85,
+                },
+              },
+              768: {
+                slidesPerView: 2,
+                coverflowEffect: {
+                  rotate: 25,
+                  stretch: 0,
+                  depth: 180,
+                  scale: 0.8,
+                },
+              },
+              1024: {
+                slidesPerView: 3,
+                coverflowEffect: {
+                  rotate: 30,
+                  stretch: "50%",
+                  depth: 200,
+                  scale: 0.75,
+                },
+              },
+            }}
             className="mySwiper"
           >
             {[
@@ -212,27 +243,27 @@ const Home = () => {
                     repeat: Infinity,
                     repeatType: "reverse",
                   }}
-                  className="p-7 rounded-2xl backdrop-blur-2xl bg-white/80 shadow-xl border border-gray-200"
+                  className="p-5 md:p-7 rounded-2xl backdrop-blur-2xl bg-white/80 shadow-xl border border-gray-200 mx-2"
                 >
                   {/* Profile */}
                   <div className="flex items-center gap-4 mb-5">
                     <img
                       src={story.img}
                       alt={story.name}
-                      className="w-14 h-14 rounded-full object-cover border-2 border-[#d95022]/40 shadow-sm"
+                      className="w-12 md:w-14 h-12 md:h-14 rounded-full object-cover border-2 border-[#d95022]/40 shadow-sm"
                     />
                     <div>
-                      <h4 className="font-semibold text-[#5a1163] text-lg">
+                      <h4 className="font-semibold text-[#5a1163] text-base md:text-lg">
                         {story.name}
                       </h4>
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-gray-500 text-xs md:text-sm">
                         Scholarship Recipient
                       </p>
                     </div>
                   </div>
 
                   {/* Text */}
-                  <p className="text-gray-700 leading-relaxed text-base">
+                  <p className="text-gray-700 leading-relaxed text-sm md:text-base">
                     {story.text}
                   </p>
                 </motion.div>
