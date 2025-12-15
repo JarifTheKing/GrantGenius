@@ -613,10 +613,6 @@
 
 // export default MyApplications;
 
-
-
-
-
 import { useEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
 import Swal from "sweetalert2";
@@ -694,6 +690,26 @@ const MyApplications = () => {
   };
 
   /* ================= REVIEW ================= */
+  // const submitReview = async () => {
+  //   if (!rating || !comment) {
+  //     return Swal.fire("Required", "Rating & comment required", "warning");
+  //   }
+
+  //   try {
+  //     await axiosSecure.post("/reviews", {
+  //       scholarshipId: selectedApp.scholarshipId,
+  //       rating: Number(rating),
+  //       comment,
+  //     });
+
+  //     Swal.fire("Success", "Review submitted successfully", "success");
+  //     setShowReview(false);
+  //     setRating("");
+  //     setComment("");
+  //   } catch {
+  //     Swal.fire("Error", "Failed to submit review", "error");
+  //   }
+  // };
   const submitReview = async () => {
     if (!rating || !comment) {
       return Swal.fire("Required", "Rating & comment required", "warning");
@@ -701,6 +717,7 @@ const MyApplications = () => {
 
     try {
       await axiosSecure.post("/reviews", {
+        applicationId: selectedApp._id, // ✅ REQUIRED
         scholarshipId: selectedApp.scholarshipId,
         rating: Number(rating),
         comment,
@@ -710,7 +727,8 @@ const MyApplications = () => {
       setShowReview(false);
       setRating("");
       setComment("");
-    } catch {
+    } catch (err) {
+      console.error(err);
       Swal.fire("Error", "Failed to submit review", "error");
     }
   };
@@ -829,7 +847,7 @@ const MyApplications = () => {
                     )}
 
                     {/* ADD REVIEW */}
-                    {app.applicationStatus === "completed" && (
+                    {app.applicationStatus === "approved" && !app.reviewed && (
                       <ActionBtn
                         icon={<Star size={16} />}
                         success

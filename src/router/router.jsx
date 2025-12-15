@@ -236,8 +236,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "add-review/:id",
-        element: <AddReview />,
+        element: (
+          <PrivateRoute>
+            <AddReview />
+          </PrivateRoute>
+        ),
       },
+
       // {
       //   path: "application-details/:id",
       //   element: (
