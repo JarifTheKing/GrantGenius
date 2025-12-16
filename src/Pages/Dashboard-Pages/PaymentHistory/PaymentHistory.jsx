@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
-// import useAxios from "../../../Hooks/useAxios";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/UseAxiosSecure";
 

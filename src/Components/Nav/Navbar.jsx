@@ -82,7 +82,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <NavLink to="/scholarships" className={activeLink}>
+                <NavLink to="/all-scholarships" className={activeLink}>
                   All Scholarships
                 </NavLink>
               </li>
@@ -109,40 +109,6 @@ const Navbar = () => {
                   About Us
                 </NavLink>
               </li>
-
-              {/* {user && (
-                <li>
-                  <details>
-                    <summary className="flex items-center gap-2 cursor-pointer">
-                      <img
-                        src={
-                          user?.photoURL ||
-                          "https://img.icons8.com/office/40/gender-neutral-user.png"
-                        }
-                        className="w-10 h-10 rounded-full border border-primary"
-                      />
-                      Profile
-                    </summary>
-
-                    <ul className="p-2 mt-2 bg-white rounded-xl border border-primary/20 shadow">
-                      <li>
-                        <NavLink to="/dashboard" className={activeLink}>
-                          Dashboard
-                        </NavLink>
-                      </li>
-
-                      <li>
-                        <button
-                          onClick={handleLogout}
-                          className="btn w-full bg-secondary text-white hover:bg-secondary/80"
-                        >
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
-                  </details>
-                </li>
-              )} */}
             </ul>
           </div>
 
@@ -295,22 +261,6 @@ const Navbar = () => {
                     Dashboard
                   </NavLink>
                 </li>
-
-                {/* PROFILE */}
-                {/* <li>
-                  <NavLink
-                    to="/profile"
-                    className={({ isActive }) =>
-                      `btn w-full font-bold px-4 py-2 rounded-lg transition-all ${
-                        isActive
-                          ? "bg-primary text-white shadow-md"
-                          : "btn-outline text-secondary hover:text-primary hover:bg-primary/10"
-                      }`
-                    }
-                  >
-                    My Profile
-                  </NavLink>
-                </li> */}
 
                 {/* LOGOUT */}
                 <li>

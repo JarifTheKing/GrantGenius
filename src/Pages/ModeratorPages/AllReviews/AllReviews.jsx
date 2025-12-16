@@ -12,10 +12,14 @@ const AllReviews = () => {
     axiosSecure
       .get("/reviews")
       .then((res) => {
+        console.log("REVIEWS:", res.data);
         setReviews(res.data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("REVIEWS ERROR:", err.response?.status);
+        setLoading(false);
+      });
   }, [axiosSecure]);
 
   const handleDelete = (id) => {
@@ -46,15 +50,15 @@ const AllReviews = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">All Reviews</h2>
+      <h2 className="text-2xl font-bold mb-6 text-primary">All Reviews</h2>
 
-      <div className="overflow-x-auto bg-base-100 rounded-xl shadow">
+      <div className="overflow-x-auto bg-base-100 rounded-xl shadow-md border border-primary/20">
         <table className="table">
           <thead>
             <tr>
               <th>#</th>
               <th>User</th>
-              <th>University</th>
+              <th>Scholarship Id</th>
               <th>Rating</th>
               <th>Comment</th>
               <th>Date</th>
@@ -67,33 +71,23 @@ const AllReviews = () => {
               <tr key={review._id}>
                 <td>{index + 1}</td>
 
-                <td className="flex items-center gap-3">
-                  <img
-                    src={
-                      review.userImage || "https://i.ibb.co/2d9F4Qp/avatar.png"
-                    }
-                    className="w-10 h-10 rounded-full"
-                    alt="User"
-                  />
-                  <div>
-                    <p className="font-semibold">{review.userName}</p>
-                    <p className="text-sm opacity-70">{review.userEmail}</p>
-                  </div>
+                <td>
+                  <p className="font-semibold">{review.userEmail}</p>
                 </td>
 
-                <td>{review.universityName}</td>
+                <td>{review.scholarshipId}</td>
 
                 <td>
                   <span className="badge badge-primary">
-                    ⭐ {review.ratingPoint}
+                    ⭐ {review.rating}
                   </span>
                 </td>
 
-                <td className="max-w-xs truncate" title={review.reviewComment}>
-                  {review.reviewComment}
+                <td className="max-w-xs truncate" title={review.comment}>
+                  {review.comment}
                 </td>
 
-                <td>{new Date(review.reviewDate).toLocaleDateString()}</td>
+                <td>{new Date(review.createdAt).toLocaleDateString()}</td>
 
                 <td>
                   <button

@@ -25,7 +25,7 @@ import PaymentSuccess from "../Pages/Dashboard-Pages/PaymentSuccess/PaymentSucce
 import PaymentCancel from "../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel";
 import BeAModerator from "../Pages/ModeratorPages/BeModerator/BeAModerator";
 import AdminRoute from "./AdminRoute";
-import ModeratorRequest from "../Pages/AdminPages/ModeratorRequ/ModeratorRequest";
+
 import ApproveModerator from "../Pages/AdminPages/ApproveModerator/ApproveModerator";
 import UsersManagement from "../Pages/Dashboard-Pages/UsersManagement/UsersManagement";
 import AllReviews from "../Pages/ModeratorPages/AllReviews/AllReviews";
@@ -35,6 +35,7 @@ import AddReview from "../Pages/Dashboard-Pages/AddReview/AddReview";
 // import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
 import Analytics from "../Pages/AdminPages/Analytics/Analytics";
 import ApplicationReview from "../Pages/ModeratorPages/ApplicationReview/ApplicationReview";
+import MyReviews from "../Pages/Dashboard-Pages/MyReviews/MyReviews";
 
 export const router = createBrowserRouter([
   {
@@ -123,14 +124,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "moderator-requests",
-        element: (
-          <AdminRoute>
-            <ModeratorRequest />
-          </AdminRoute>
-        ),
-      },
 
       {
         path: "approve-moderator",
@@ -214,6 +207,15 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <UpdateScholarship></UpdateScholarship>
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "my-reviews",
+        element: (
+          <PrivateRoute>
+            <MyReviews></MyReviews>
           </PrivateRoute>
         ),
       },

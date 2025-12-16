@@ -19,19 +19,6 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("student");
 
-  // You can trigger loader like this wherever needed:
-  // setIsLoading(true);
-  // setTimeout(() => setIsLoading(false), 2000);
-
-  // useEffect(() => {
-  //   if (user?.email) {
-  //     axiosSecure.get(`/users?email=${user.email}`).then((res) => {
-  //       if (res.data?.length > 0) {
-  //         setRole(res.data[0].role);
-  //       }
-  //     });
-  //   }
-  // }, [user, axiosSecure]);
   useEffect(() => {
     if (!user?.email) return;
 
@@ -134,7 +121,7 @@ const DashboardLayout = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="drawer-side is-drawer-close:overflow-visible">
+        <div className="drawer-side z-80 is-drawer-close:overflow-visible">
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
           <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64 ">
@@ -201,9 +188,12 @@ const DashboardLayout = () => {
             <ul className="menu w-full grow">
               {/* Home */}
               <li>
-                <Link
+                <NavLink
                   to="/dashboard/dashboard-home"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  className={({ isActive }) =>
+                    `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                  }
                   data-tip="Home Page"
                 >
                   <svg
@@ -220,15 +210,18 @@ const DashboardLayout = () => {
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                   </svg>
                   <span className="is-drawer-close:hidden">Home</span>
-                </Link>
+                </NavLink>
               </li>
 
               {/* My Applications */}
               {role === "student" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="my-applications"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="My-Applications"
                   >
                     <svg
@@ -253,16 +246,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       My Applications
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Payment History */}
               {role === "student" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="payment-history"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="payment-history"
                   >
                     {/* <img
@@ -281,16 +277,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Payment History
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Add Scholarship */}
               {role === "admin" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="add-scholarship"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Add Scholarship"
                   >
                     <svg
@@ -311,16 +310,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Add Scholarship
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Be Moderator */}
               {role === "student" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="be-moderator"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Be Moderator"
                   >
                     <img
@@ -330,16 +332,19 @@ const DashboardLayout = () => {
                       alt="crown"
                     />
                     <span className="is-drawer-close:hidden">Be Moderator</span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Users Management */}
               {role === "admin" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="users-management"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Users Management"
                   >
                     <img
@@ -351,16 +356,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Users Management
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Approve-moderator */}
               {role === "admin" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="approve-moderator"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Approve Moderator"
                   >
                     <img
@@ -372,16 +380,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Approve Moderator
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Manage/My Scholarship */}
               {role === "admin" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="my-scholarship"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="My Scholarship"
                   >
                     <img
@@ -393,16 +404,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Manage Scholarship
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* Admin Analytics */}
               {role === "admin" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="analytics"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Admin Analytics"
                   >
                     <img
@@ -414,16 +428,19 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Admin Analytics
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
               {/* All Reviews */}
               {role === "moderator" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="all-reviews"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="All Reviews"
                   >
                     <img
@@ -433,16 +450,40 @@ const DashboardLayout = () => {
                       alt="scholarship"
                     />
                     <span className="is-drawer-close:hidden">All Reviews</span>
-                  </Link>
+                  </NavLink>
+                </li>
+              )}
+              {/* My Reviews */}
+              {role === "student" && (
+                <li>
+                  <NavLink
+                    to="my-reviews"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
+                    data-tip="My Reviews"
+                  >
+                    <img
+                      width="18"
+                      height="18"
+                      src="https://img.icons8.com/ios-glyphs/30/scholarship.png"
+                      alt="scholarship"
+                    />
+                    <span className="is-drawer-close:hidden">My Reviews</span>
+                  </NavLink>
                 </li>
               )}
 
               {/* manage-applications */}
               {role === "moderator" && (
                 <li>
-                  <Link
+                  <NavLink
                     to="manage-applications"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right
+         ${isActive ? "bg-primary/20 text-primary rounded-xl" : ""}`
+                    }
                     data-tip="Manage Applications"
                   >
                     <img
@@ -454,7 +495,7 @@ const DashboardLayout = () => {
                     <span className="is-drawer-close:hidden">
                       Manage Applications
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               )}
 
@@ -567,7 +608,7 @@ const DashboardLayout = () => {
                   onClick={handleLogout}
                   className="
       w-full flex items-center text-lg font-bold
-      px-2 
+      px-2
       bg-red-700
       rounded-xl
       hover:bg-secondary
