@@ -4,15 +4,15 @@ A Scholarship Management Platform
 
 ## 🔗 Live Site
 
-👉 https://your-live-site-link.com
+👉 https://grant-genius-client.vercel.app/
 
 ## 🛠 Server Repository
 
-👉 https://github.com/your-username/grantgenius-server
+👉 https://github.com/JarifTheKing/Grant-Genius-server
 
 ## 💻 Client Repository
 
-👉 https://github.com/your-username/grantgenius-client
+👉 https://github.com/JarifTheKing/GrantGenius
 
 ---
 

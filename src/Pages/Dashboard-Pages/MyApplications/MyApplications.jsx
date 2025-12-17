@@ -100,26 +100,7 @@ const MyApplications = () => {
   };
 
   /* ================= REVIEW ================= */
-  // const submitReview = async () => {
-  //   if (!rating || !comment) {
-  //     return Swal.fire("Required", "Rating & comment required", "warning");
-  //   }
 
-  //   try {
-  //     await axiosSecure.post("/reviews", {
-  //       scholarshipId: selectedApp.scholarshipId,
-  //       rating: Number(rating),
-  //       comment,
-  //     });
-
-  //     Swal.fire("Success", "Review submitted successfully", "success");
-  //     setShowReview(false);
-  //     setRating("");
-  //     setComment("");
-  //   } catch {
-  //     Swal.fire("Error", "Failed to submit review", "error");
-  //   }
-  // };
   const submitReview = async () => {
     if (!rating || !comment) {
       return Swal.fire("Required", "Rating & comment required", "warning");
@@ -286,13 +267,7 @@ const MyApplications = () => {
       </div>
 
       {/* DETAILS MODAL */}
-      {/* {showDetails && selectedApp && (
-        <Modal title="Application Details" close={() => setShowDetails(false)}>
-          <pre className="text-xs bg-gray-100 p-3 rounded">
-            {JSON.stringify(selectedApp, null, 2)}
-          </pre>
-        </Modal>
-      )} */}
+
       {showDetails && selectedApp && (
         <Modal title="Application Details" close={() => setShowDetails(false)}>
           <div className="space-y-4 text-sm">
