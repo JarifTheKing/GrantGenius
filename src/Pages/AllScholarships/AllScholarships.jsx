@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
@@ -58,21 +56,46 @@ const AllScholarships = () => {
       );
     }
 
+    // if (filterCategory) {
+    //   result = result.filter(
+    //     (item) => item.scholarshipCategory === filterCategory
+    //   );
+    // }
+
     if (filterCategory) {
       result = result.filter(
-        (item) => item.scholarshipCategory === filterCategory
+        (item) =>
+          item.scholarshipCategory?.toLowerCase().trim() ===
+          filterCategory.toLowerCase().trim()
       );
     }
 
+    // if (filterSubject) {
+    //   result = result.filter((item) => item.subjectCategory === filterSubject);
+    // }
     if (filterSubject) {
-      result = result.filter((item) => item.subjectCategory === filterSubject);
+      result = result.filter(
+        (item) =>
+          item.subjectCategory?.toLowerCase().trim() ===
+          filterSubject.toLowerCase().trim()
+      );
     }
+
+    // if (filterLocation) {
+    //   result = result.filter(
+    //     (item) =>
+    //       item.universityCountry === filterLocation ||
+    //       item.universityCity === filterLocation
+    //   );
+    // }
 
     if (filterLocation) {
       result = result.filter(
         (item) =>
-          item.universityCountry === filterLocation ||
-          item.universityCity === filterLocation
+          item.universityCountry?.toLowerCase().trim() ===
+            filterLocation.toLowerCase().trim() ||
+          item.universityCity?.toLowerCase().trim() ===
+            filterLocation.toLowerCase().trim()
       );
     }
 
@@ -121,9 +144,9 @@ const AllScholarships = () => {
           onChange={(e) => setFilterCategory(e.target.value)}
         >
           <option value="">Funding Type</option>
-          <option>Full fund</option>
-          <option>Partial</option>
-          <option>Self-fund</option>
+          <option value="full fund">Full fund</option>
+          <option value="partial">Partial</option>
+          <option value="self-fund">Self-fund</option>
         </select>
 
         <select
@@ -131,10 +154,10 @@ const AllScholarships = () => {
           onChange={(e) => setFilterSubject(e.target.value)}
         >
           <option value="">Subject</option>
-          <option>Engineering</option>
-          <option>Computer Science</option>
-          <option>Business</option>
-          <option>Law</option>
+          <option value="engineering">Engineering</option>
+          <option value="computer science">Computer Science</option>
+          <option value="business">Business</option>
+          <option value="law">Law</option>
         </select>
 
         <select

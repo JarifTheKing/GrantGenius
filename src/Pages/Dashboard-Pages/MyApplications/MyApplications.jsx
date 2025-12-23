@@ -69,8 +69,22 @@ const MyApplications = () => {
 
       // update UI instantly
       setApplications((prev) =>
-        prev.map((a) => (a._id === selectedApp._id ? { ...a, ...editData } : a))
+        prev.map((a) =>
+          a._id === selectedApp._id
+            ? {
+                ...a,
+                category: editData.subject,
+                universityAddress: editData.address,
+              }
+            : a
+        )
       );
+
+      setSelectedApp((prev) => ({
+        ...prev,
+        category: editData.subject,
+        universityAddress: editData.address,
+      }));
 
       setShowEdit(false);
     } catch {

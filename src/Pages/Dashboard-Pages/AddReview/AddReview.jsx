@@ -14,21 +14,37 @@ const AddReview = () => {
   const [ratingPoint, setRatingPoint] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
 
+  // useEffect(() => {
+  //   axiosSecure.get(`/applications/${id}`).then((res) => {
+  //     setApplication(res.data);
+  //   });
+  // }, [id, axiosSecure]);
   useEffect(() => {
     axiosSecure.get(`/applications/${id}`).then((res) => {
+      if (res.data.reviewed) {
+        toast.error("You already reviewed this application");
+        navigate("/dashboard/my-reviews");
+        return;
+      }
       setApplication(res.data);
     });
-  }, [id, axiosSecure]);
+  }, [id, axiosSecure, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // const reviewData = {
+    //   applicationId: id,
+    //   scholarshipId: application.scholarshipId,
+    //   userEmail: user.email,
+    //   ratingPoint,
+    //   reviewComment,
+    // };
     const reviewData = {
       applicationId: id,
       scholarshipId: application.scholarshipId,
-      userEmail: user.email,
-      ratingPoint,
-      reviewComment,
+      rating: ratingPoint,
+      comment: reviewComment,
     };
 
     try {
@@ -36,7 +52,17 @@ const AddReview = () => {
       toast.success("Review submitted successfully");
       navigate("/dashboard/my-applications");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Review failed");
+      // catch (err) {
+      //   toast.error(err.response?.data?.message || "Review failed");
+      // }
+      if (err.response?.status === 409) {
+        toast.error("You already submitted a review for this application");
+        navigate("/dashboard/my-reviews");
+      } else if (err.response?.status === 403) {
+        toast.error("Only approved applications can be reviewed");
+      } else {
+        toast.error("Review submission failed");
+      }
     }
   };
 
