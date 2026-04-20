@@ -4,9 +4,9 @@ import { Carousel } from "react-responsive-carousel";
 import { motion } from "framer-motion";
 import { Bars } from "react-loader-spinner";
 
-import bannerImg1 from "../../assets/New-Banner/img-1.jpg";
-import bannerImg2 from "../../assets/New-Banner/img-2.jpg";
-import bannerImg3 from "../../assets/New-Banner/img-3.jpg";
+import bannerImg1 from "../../assets/New-Banner/img-1.webp";
+import bannerImg2 from "../../assets/New-Banner/img-2.webp";
+import bannerImg3 from "../../assets/New-Banner/img-3.webp";
 import { Link } from "react-router";
 
 const Banner = () => {

@@ -113,7 +113,9 @@ const DashboardLayout = () => {
           {/* Main Page + Footer */}
           <div className="flex flex-col min-h-screen">
             <div className="flex-grow">
-              <Outlet />
+              <React.Suspense fallback={<div className="flex justify-center items-center py-20 min-h-screen"><Bars height="80" width="80" color="#d95022" ariaLabel="loading" /></div>}>
+                <Outlet />
+              </React.Suspense>
             </div>
 
             <Footer />

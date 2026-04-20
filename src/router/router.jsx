@@ -1,41 +1,41 @@
+import React from "react";
 import { createBrowserRouter } from "react-router";
+
 import RootLayout from "../layouts/RootLayout";
-import Home from "../Pages/Home/Home";
-import LogIn from "../Pages/Auth/Login";
-import Register from "../Pages/Auth/Register";
 import ErrorPage from "../Error/ErrorPage";
-import Profile from "../Pages/MyProfile/Profile";
-import AllScholarships from "../Pages/AllScholarships/AllScholarships";
-import DetailsScholarship from "../Pages/AllScholarships/DetailScholarship/DetailsScholarship";
-import About from "../Pages/About/About";
 import PrivateRoute from "./PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
-import AddScholarship from "../Pages/Dashboard-Pages/AddScholarship";
-import MyScholarships from "../Pages/Dashboard-Pages/MyScholarships";
-import UpdateScholarship from "../Pages/Dashboard-Pages/UpdateScholarship";
-import HowItWorks from "../Pages/How-It-Works/HowItWorks";
-import Blogs from "../Pages/Home/Blogs/Blogs";
-import ContactUs from "../Pages/Home/Contact/ContactUs";
-import MyCourses from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
-import DashboardHome from "../Pages/Dashboard-Pages/DashboardHome";
-import MyApplications from "../Pages/Dashboard-Pages/MyApplications/MyApplications";
-import Payment from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
-import PaymentHistory from "../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory";
-import PaymentSuccess from "../Pages/Dashboard-Pages/PaymentSuccess/PaymentSuccess";
-import PaymentCancel from "../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel";
-import BeAModerator from "../Pages/ModeratorPages/BeModerator/BeAModerator";
 import AdminRoute from "./AdminRoute";
-
-import ApproveModerator from "../Pages/AdminPages/ApproveModerator/ApproveModerator";
-import UsersManagement from "../Pages/Dashboard-Pages/UsersManagement/UsersManagement";
-import AllReviews from "../Pages/ModeratorPages/AllReviews/AllReviews";
 import ModeratorRoute from "./ModeratorRoute";
-import ManageApplications from "../Pages/ModeratorPages/ManageApplications/ManageApplications";
-import AddReview from "../Pages/Dashboard-Pages/AddReview/AddReview";
-// import ApplicationDetails from "../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails";
-import Analytics from "../Pages/AdminPages/Analytics/Analytics";
-import ApplicationReview from "../Pages/ModeratorPages/ApplicationReview/ApplicationReview";
-import MyReviews from "../Pages/Dashboard-Pages/MyReviews/MyReviews";
+
+const Home = React.lazy(() => import("../Pages/Home/Home"));
+const LogIn = React.lazy(() => import("../Pages/Auth/Login"));
+const Register = React.lazy(() => import("../Pages/Auth/Register"));
+const Profile = React.lazy(() => import("../Pages/MyProfile/Profile"));
+const AllScholarships = React.lazy(() => import("../Pages/AllScholarships/AllScholarships"));
+const DetailsScholarship = React.lazy(() => import("../Pages/AllScholarships/DetailScholarship/DetailsScholarship"));
+const About = React.lazy(() => import("../Pages/About/About"));
+const AddScholarship = React.lazy(() => import("../Pages/Dashboard-Pages/AddScholarship"));
+const MyScholarships = React.lazy(() => import("../Pages/Dashboard-Pages/MyScholarships"));
+const UpdateScholarship = React.lazy(() => import("../Pages/Dashboard-Pages/UpdateScholarship"));
+const HowItWorks = React.lazy(() => import("../Pages/How-It-Works/HowItWorks"));
+const Blogs = React.lazy(() => import("../Pages/Home/Blogs/Blogs"));
+const ContactUs = React.lazy(() => import("../Pages/Home/Contact/ContactUs"));
+const DashboardHome = React.lazy(() => import("../Pages/Dashboard-Pages/DashboardHome"));
+const MyApplications = React.lazy(() => import("../Pages/Dashboard-Pages/MyApplications/MyApplications"));
+const PaymentHistory = React.lazy(() => import("../Pages/Dashboard-Pages/PaymentHistory/PaymentHistory"));
+const PaymentSuccess = React.lazy(() => import("../Pages/Dashboard-Pages/PaymentSuccess/PaymentSuccess"));
+const PaymentCancel = React.lazy(() => import("../Pages/Dashboard-Pages/PaymentCancel/PaymentCancel"));
+const BeAModerator = React.lazy(() => import("../Pages/ModeratorPages/BeModerator/BeAModerator"));
+const ApproveModerator = React.lazy(() => import("../Pages/AdminPages/ApproveModerator/ApproveModerator"));
+const UsersManagement = React.lazy(() => import("../Pages/Dashboard-Pages/UsersManagement/UsersManagement"));
+const AllReviews = React.lazy(() => import("../Pages/ModeratorPages/AllReviews/AllReviews"));
+const ManageApplications = React.lazy(() => import("../Pages/ModeratorPages/ManageApplications/ManageApplications"));
+const AddReview = React.lazy(() => import("../Pages/Dashboard-Pages/AddReview/AddReview"));
+// const ApplicationDetails = React.lazy(() => import("../Pages/ModeratorPages/ApplicationDetails/ApplicationDetails"));
+const Analytics = React.lazy(() => import("../Pages/AdminPages/Analytics/Analytics"));
+const ApplicationReview = React.lazy(() => import("../Pages/ModeratorPages/ApplicationReview/ApplicationReview"));
+const MyReviews = React.lazy(() => import("../Pages/Dashboard-Pages/MyReviews/MyReviews"));
 
 export const router = createBrowserRouter([
   {
